@@ -1,3 +1,3 @@
 # raylib-lua
 
-Reused boilerplate for Raylib Lua bindings.
+Reusable boilerplate for Raylib Lua bindings.
