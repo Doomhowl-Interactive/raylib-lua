@@ -68,6 +68,8 @@ extern "C" {
     Model LuaGetArgument_Model(lua_State* L, int index);
     Ray LuaGetArgument_Ray(lua_State* L, int index);
 
+    void rLuaInitDeviceFromExisting(lua_State* lua);
+
 #ifdef __cplusplus
 }
 #endif
