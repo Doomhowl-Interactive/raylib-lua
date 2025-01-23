@@ -2484,6 +2484,15 @@ int lua_LoadShader(lua_State* L)
     return 1;
 }
 
+int lua_LoadShaderFromMemory(lua_State* L)
+{
+    const char* vertex = LuaGetArgument_string(L, 1);
+    const char* fragment = LuaGetArgument_string(L, 2);
+    Shader result = LoadShaderFromMemory(vertex, fragment);
+    LuaPush_Shader(L, result);
+    return 1;
+}
+
 // Unload shader from GPU memory (VRAM)
 int lua_UnloadShader(lua_State* L)
 {
@@ -3570,6 +3579,7 @@ static luaL_Reg raylib_functions[] = {
     REG(DrawBoundingBox),
     REG(DrawBillboard),
     REG(LoadShader),
+    REG(LoadShaderFromMemory),
     REG(UnloadShader),
     REG(GetShaderLocation),
     REG(BeginShaderMode),
