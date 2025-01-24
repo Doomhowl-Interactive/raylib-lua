@@ -9,6 +9,25 @@ extern "C" {
 #include <lua.h>
 #include <lualib.h>
 
+//----------------------------------------------------------------------------------
+// Defines and Macros
+//----------------------------------------------------------------------------------
+
+#define LuaGetArgument_Image(L, img) *(Image*)LuaGetArgumentOpaqueTypeWithMetatable(L, img, "Image")
+#define LuaGetArgument_Texture2D(L, tex) *(Texture2D*)LuaGetArgumentOpaqueTypeWithMetatable(L, tex, "Texture2D")
+#define LuaGetArgument_RenderTexture2D(L, rtex) *(RenderTexture2D*)LuaGetArgumentOpaqueTypeWithMetatable(L, rtex, "RenderTexture2D")
+#define LuaGetArgument_Font(L, sf) *(Font*)LuaGetArgumentOpaqueTypeWithMetatable(L, sf, "Font")
+#define LuaGetArgument_Mesh(L, vd) *(Mesh*)LuaGetArgumentOpaqueType(L, vd)
+#define LuaGetArgument_Shader(L, s) *(Shader*)LuaGetArgumentOpaqueType(L, s)
+#define LuaGetArgument_Sound(L, snd) *(Sound*)LuaGetArgumentOpaqueType(L, snd)
+#define LuaGetArgument_Wave(L, wav) *(Wave*)LuaGetArgumentOpaqueType(L, wav)
+#define LuaGetArgument_Music(L, mus) *(Music*)LuaGetArgumentOpaqueType(L, mus)
+#define LuaGetArgument_AudioStream(L, aud) *(AudioStream*)LuaGetArgumentOpaqueType(L, aud)
+#define LuaGetArgument_PhysicsBody(L, body) *(PhysicsBody*)LuaGetArgumentOpaqueType(L, body)
+
+#define LuaPushOpaqueType(L, str) LuaPushOpaque(L, &str, sizeof(str))
+#define LuaPushOpaqueTypeWithMetatable(L, str, meta) LuaPushOpaqueWithMetatable(L, &str, sizeof(str), #meta)
+
 #define LuaPush_int(L, value) lua_pushinteger(L, value)
 #define LuaPush_float(L, value) lua_pushnumber(L, value);
 #define LuaPush_bool(L, value) lua_pushboolean(L, value)
@@ -25,9 +44,6 @@ extern "C" {
 #define LuaPush_Music(L, mus) LuaPushOpaqueType(L, mus)
 #define LuaPush_AudioStream(L, aud) LuaPushOpaqueType(L, aud)
 #define LuaPush_PhysicsBody(L, body) LuaPushOpaqueType(L, body)
-
-#define LuaPushOpaqueType(L, str) LuaPushOpaque(L, &str, sizeof(str))
-#define LuaPushOpaqueTypeWithMetatable(L, str, meta) LuaPushOpaqueWithMetatable(L, &str, sizeof(str), #meta)
 
     void LuaPushOpaque(lua_State* L, void* ptr, size_t size);
     void LuaPushOpaqueWithMetatable(lua_State* L, void* ptr, size_t size, const char* metatable_name);
