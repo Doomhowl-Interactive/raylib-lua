@@ -3130,6 +3130,16 @@ int lua_Vector3Transform(lua_State* L)
     return 1;
 }
 
+int lua_Vector4Lerp(lua_State* L)
+{
+    Vector4 arg1 = LuaGetArgument_Vector4(L, 1);
+    Vector4 arg2 = LuaGetArgument_Vector4(L, 2);
+    float arg3 = LuaGetArgument_float(L, 3);
+    Vector4 result = Vector4Lerp(arg1, arg2, arg3);
+    LuaPush_Vector4(L, result);
+    return 1;
+}
+
 //----------------------------------------------------------------------------------
 // raylib [raymath] module functions - Matrix math
 //----------------------------------------------------------------------------------
@@ -3640,6 +3650,9 @@ static luaL_Reg raylib_functions[] = {
     REG(Vector3Transform),
     REG(Vector3Lerp),
     REG(Vector3Reflect),
+
+    // [raymath] module functions - Vector4
+    REG(Vector4Lerp),
 
     // [raymath] module functions - Matrix
     REG(MatrixDeterminant),
