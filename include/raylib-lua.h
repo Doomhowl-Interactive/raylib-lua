@@ -3789,7 +3789,7 @@ extern lua_State *L;
     };
 #undef REG
 #else
-    extern luaL_Reg raylib_functions[];
+extern luaL_Reg raylib_functions[];
 #endif
 
 #ifdef RAYLIB_LUA_IMPLEMENTATION
@@ -3939,12 +3939,12 @@ extern lua_State *L;
         LuaSetEnum("XBOX_AXIS_LT", 2);      // [-1..1] (pressure-level)
         LuaSetEnum("XBOX_AXIS_RT", 5);      // [-1..1] (pressure-level)
 #else
-    LuaSetEnum("XBOX_AXIS_LEFT_X", 0);  // [-1..1] (left->right)
-    LuaSetEnum("XBOX_AXIS_LEFT_Y", 1);  // [1..-1] (up->down)
-    LuaSetEnum("XBOX_AXIS_RIGHT_X", 2); // [-1..1] (left->right)
-    LuaSetEnum("XBOX_AXIS_RIGHT_Y", 3); // [1..-1] (up->down)
-    LuaSetEnum("XBOX_AXIS_LT", 4);      // [-1..1] (pressure-level)
-    LuaSetEnum("XBOX_AXIS_RT", 5);      // [-1..1] (pressure-level)
+        LuaSetEnum("XBOX_AXIS_LEFT_X", 0);  // [-1..1] (left->right)
+        LuaSetEnum("XBOX_AXIS_LEFT_Y", 1);  // [1..-1] (up->down)
+        LuaSetEnum("XBOX_AXIS_RIGHT_X", 2); // [-1..1] (left->right)
+        LuaSetEnum("XBOX_AXIS_RIGHT_Y", 3); // [1..-1] (up->down)
+        LuaSetEnum("XBOX_AXIS_LT", 4);      // [-1..1] (pressure-level)
+        LuaSetEnum("XBOX_AXIS_RT", 5);      // [-1..1] (pressure-level)
 #endif
         LuaEndEnum("GAMEPAD");
 
@@ -4064,11 +4064,11 @@ extern lua_State *L;
 #if defined(PLATFORM_DESKTOP)
         lua_setglobal(L, "PLATFORM_DESKTOP");
 #elif defined(PLATFORM_ANDROID)
-    lua_setglobal(L, "PLATFORM_ANDROID");
+        lua_setglobal(L, "PLATFORM_ANDROID");
 #elif defined(PLATFORM_RPI)
-    lua_setglobal(L, "PLATFORM_RPI");
+        lua_setglobal(L, "PLATFORM_RPI");
 #elif defined(PLATFORM_WEB)
-    lua_setglobal(L, "PLATFORM_WEB");
+        lua_setglobal(L, "PLATFORM_WEB");
 #endif
 
         LuaBuildOpaqueMetatables();
@@ -4076,8 +4076,8 @@ extern lua_State *L;
         rLuaRegisterFunctions(0); // Register Lua raylib functions
     }
 #else
-    void rLuaRegisterFunctions(const char *opt_table);
-    void rLuaInitDeviceFromExisting(lua_State *lua);
+void rLuaRegisterFunctions(const char *opt_table);
+void rLuaInitDeviceFromExisting(lua_State *lua);
 #endif
 #ifdef __cplusplus
 }
