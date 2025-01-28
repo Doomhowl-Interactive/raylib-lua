@@ -37,3 +37,9 @@ jobs:
 
       - name: Build the project
         run: cmake --build build --parallel
+
+      - name: Create build directory
+        run: cmake -B build -S . -DRAYLIB_LUA_BUILD_TEST=ON -DRAYLIB_LUA_CXX=ON
+
+      - name: Build the project with C++
+        run: cmake --build build --parallel
