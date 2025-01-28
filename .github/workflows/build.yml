@@ -26,14 +26,20 @@ jobs:
         with:
           cmake-version: "latest"
 
-      - name: Install dependencies (Linux/macOS)
+      - name: Install dependencies on Linux (if applicable)
         if: runner.os != 'Windows'
         run: |
           sudo apt-get update -y || true
           sudo apt-get install -y build-essential cmake libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev || true
 
       - name: Create build directory
-        run: cmake -B build -S . -DRAYLIB_LUA_BUILD_TEST=ON
+        run: cmake -B build -S . -DRAYLIB_LUA_BUILD_TEST=ON -DCMAKE_BUILD_TYPE=Debug
 
       - name: Build the project
+        run: cmake --build build --parallel
+
+      - name: Create build directory
+        run: cmake -B build -S . -DRAYLIB_LUA_BUILD_TEST=ON -DRAYLIB_LUA_CXX=ON -DCMAKE_BUILD_TYPE=Debug
+
+      - name: Build the project with C++
         run: cmake --build build --parallel

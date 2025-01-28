@@ -20,14 +20,29 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(lua)
 
+
 add_executable(${PROJECT_NAME}
-    main.c
-    noimpl.c
+main.c
+noimpl.c
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    raylib-lua
+raylib-lua
 
-    raylib
-    lua_shared
+raylib
+lua_shared
 )
+
+option(RAYLIB_LUA_CXX "Build the C++ version of raylib-lua" OFF)
+if (RAYLIB_LUA_CXX)
+    message(STATUS "Building raylib-lua C++ version")
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+        target_compile_options(${PROJECT_NAME} PRIVATE
+            /TP
+        )
+    else()
+        target_compile_options(${PROJECT_NAME} PRIVATE
+            -x c++
+        )
+    endif()
+endif()

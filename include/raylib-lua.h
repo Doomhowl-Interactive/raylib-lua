@@ -892,7 +892,7 @@ extern lua_State *L;
 
     inline static int lua_RayHitInfo(lua_State *L)
     {
-        int hit = LuaGetArgument_int(L, 1);
+        bool hit = LuaGetArgument_bool(L, 1);
         float dis = LuaGetArgument_float(L, 2);
         Vector3 pos = LuaGetArgument_Vector3(L, 3);
         Vector3 norm = LuaGetArgument_Vector3(L, 4);
@@ -1897,7 +1897,7 @@ extern lua_State *L;
         return 0;
     }
 
-    inline static int lua_DrawRectangleRoundedLines()
+    inline static int lua_DrawRectangleRoundedLines(lua_State *L)
     {
         Rectangle rec = LuaGetArgument_Rectangle(L, 1);
         float roundness = LuaGetArgument_float(L, 2);
@@ -1907,7 +1907,7 @@ extern lua_State *L;
         return 0;
     }
 
-    inline static int lua_DrawRectangleRoundedLinesEx()
+    inline static int lua_DrawRectangleRoundedLinesEx(lua_State *L)
     {
         Rectangle rec = LuaGetArgument_Rectangle(L, 1);
         float roundness = LuaGetArgument_float(L, 2);
