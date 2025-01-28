@@ -136,8 +136,8 @@ extern "C"
     //----------------------------------------------------------------------------------
 
 #ifdef RAYLIB_LUA_IMPLEMENTATION
-    static lua_State *mainLuaState = 0;
-    static lua_State *L = 0;
+    lua_State *mainLuaState = 0;
+    lua_State *L = 0;
 #else
 extern lua_State *mainLuaState;
 extern lua_State *L;
@@ -146,52 +146,52 @@ extern lua_State *L;
     //----------------------------------------------------------------------------------
     // Forward Declarations
     //----------------------------------------------------------------------------------
-    inline void LuaPush_Color(lua_State *L, Color color);
+    inline static void LuaPush_Color(lua_State *L, Color color);
 
     //----------------------------------------------------------------------------------
     // rlua Helper Functions
     //----------------------------------------------------------------------------------
-    inline void LuaStartEnum(void)
+    inline static void LuaStartEnum(void)
     {
         lua_newtable(L);
     }
 
-    inline void LuaSetEnum(const char *name, int value)
+    inline static void LuaSetEnum(const char *name, int value)
     {
         LuaPush_int(L, value);
         lua_setfield(L, -2, name);
     }
 
-    inline void LuaSetEnumColor(const char *name, Color color)
+    inline static void LuaSetEnumColor(const char *name, Color color)
     {
         LuaPush_Color(L, color);
         lua_setfield(L, -2, name);
     }
 
-    inline void LuaEndEnum(const char *name)
+    inline static void LuaEndEnum(const char *name)
     {
         lua_setglobal(L, name);
     }
 
-    inline void LuaPushOpaque(lua_State *L, void *ptr, size_t size)
+    inline static void LuaPushOpaque(lua_State *L, void *ptr, size_t size)
     {
         void *ud = lua_newuserdata(L, size);
         memcpy(ud, ptr, size);
     }
 
-    inline void LuaPushOpaqueWithMetatable(lua_State *L, void *ptr, size_t size, const char *metatable_name)
+    inline static void LuaPushOpaqueWithMetatable(lua_State *L, void *ptr, size_t size, const char *metatable_name)
     {
         void *ud = lua_newuserdata(L, size);
         memcpy(ud, ptr, size);
         luaL_setmetatable(L, metatable_name);
     }
 
-    inline void *LuaGetArgumentOpaqueType(lua_State *L, int index)
+    inline static void *LuaGetArgumentOpaqueType(lua_State *L, int index)
     {
         return lua_touserdata(L, index);
     }
 
-    inline void *LuaGetArgumentOpaqueTypeWithMetatable(lua_State *L, int index, const char *metatable_name)
+    inline static void *LuaGetArgumentOpaqueTypeWithMetatable(lua_State *L, int index, const char *metatable_name)
     {
         return luaL_checkudata(L, index, metatable_name);
     }
@@ -448,7 +448,7 @@ extern lua_State *L;
     // Font type -> Opaque
 
     // Camera type, defines a camera position/orientation in 3d space
-    inline Camera LuaGetArgument_Camera(lua_State *L, int index)
+    inline static Camera LuaGetArgument_Camera(lua_State *L, int index)
     {
         Camera result = {0};
         index = lua_absindex(L, index); // Makes sure we use absolute indices because
@@ -468,7 +468,7 @@ extern lua_State *L;
     }
 
     // Camera2D type, defines a 2d camera
-    inline Camera2D LuaGetArgument_Camera2D(lua_State *L, int index)
+    inline static Camera2D LuaGetArgument_Camera2D(lua_State *L, int index)
     {
         Camera2D result = {0};
         index = lua_absindex(L, index); // Makes sure we use absolute indices because
@@ -560,7 +560,7 @@ extern lua_State *L;
     */
 
     // Model type
-    inline Model LuaGetArgument_Model(lua_State *L, int index)
+    inline static Model LuaGetArgument_Model(lua_State *L, int index)
     {
         assert(0 && "Unsupported");
         /*
@@ -579,7 +579,7 @@ extern lua_State *L;
     }
 
     // Ray type (useful for raycast)
-    inline Ray LuaGetArgument_Ray(lua_State *L, int index)
+    inline static Ray LuaGetArgument_Ray(lua_State *L, int index)
     {
         Ray result = {0};
         index = lua_absindex(L, index); // Makes sure we use absolute indices because
@@ -659,7 +659,7 @@ extern lua_State *L;
     //----------------------------------------------------------------------------------
     // LuaPush functions
     //----------------------------------------------------------------------------------
-    inline void LuaPush_Color(lua_State *L, Color color)
+    inline static void LuaPush_Color(lua_State *L, Color color)
     {
         lua_createtable(L, 0, 4);
         LuaPush_int(L, color.r);
@@ -672,7 +672,7 @@ extern lua_State *L;
         lua_setfield(L, -2, "a");
     }
 
-    inline void LuaPush_Vector2(lua_State *L, Vector2 vec)
+    inline static void LuaPush_Vector2(lua_State *L, Vector2 vec)
     {
         lua_createtable(L, 0, 2);
         LuaPush_float(L, vec.x);
@@ -681,7 +681,7 @@ extern lua_State *L;
         lua_setfield(L, -2, "y");
     }
 
-    inline void LuaPush_Vector3(lua_State *L, Vector3 vec)
+    inline static void LuaPush_Vector3(lua_State *L, Vector3 vec)
     {
         lua_createtable(L, 0, 3);
         LuaPush_float(L, vec.x);
@@ -692,7 +692,7 @@ extern lua_State *L;
         lua_setfield(L, -2, "z");
     }
 
-    inline void LuaPush_Vector4(lua_State *L, Vector4 vec)
+    inline static void LuaPush_Vector4(lua_State *L, Vector4 vec)
     {
         lua_createtable(L, 0, 4);
         LuaPush_float(L, vec.x);
@@ -705,7 +705,7 @@ extern lua_State *L;
         lua_setfield(L, -2, "w");
     }
 
-    inline void LuaPush_Quaternion(lua_State *L, Quaternion vec)
+    inline static void LuaPush_Quaternion(lua_State *L, Quaternion vec)
     {
         lua_createtable(L, 0, 4);
         LuaPush_float(L, vec.x);
@@ -718,7 +718,7 @@ extern lua_State *L;
         lua_setfield(L, -2, "w");
     }
 
-    inline void LuaPush_Matrix(lua_State *L, Matrix *matrix)
+    inline static void LuaPush_Matrix(lua_State *L, Matrix *matrix)
     {
         int i;
         lua_createtable(L, 16, 0);
@@ -730,7 +730,7 @@ extern lua_State *L;
         }
     }
 
-    inline void LuaPush_Rectangle(lua_State *L, Rectangle rect)
+    inline static void LuaPush_Rectangle(lua_State *L, Rectangle rect)
     {
         lua_createtable(L, 0, 4);
         LuaPush_int(L, rect.x);
@@ -743,7 +743,7 @@ extern lua_State *L;
         lua_setfield(L, -2, "height");
     }
 
-    inline void LuaPush_Ray(lua_State *L, Ray ray)
+    inline static void LuaPush_Ray(lua_State *L, Ray ray)
     {
         lua_createtable(L, 0, 2);
         LuaPush_Vector3(L, ray.position);
@@ -752,7 +752,7 @@ extern lua_State *L;
         lua_setfield(L, -2, "direction");
     }
 
-    inline void LuaPush_RayCollision(lua_State *L, RayCollision hit)
+    inline static void LuaPush_RayCollision(lua_State *L, RayCollision hit)
     {
         lua_createtable(L, 0, 4);
         LuaPush_int(L, hit.hit);
@@ -765,7 +765,7 @@ extern lua_State *L;
         lua_setfield(L, -2, "normal");
     }
 
-    inline void LuaPush_BoundingBox(lua_State *L, BoundingBox bb)
+    inline static void LuaPush_BoundingBox(lua_State *L, BoundingBox bb)
     {
         lua_createtable(L, 0, 2);
         LuaPush_Vector3(L, bb.min);
@@ -774,7 +774,7 @@ extern lua_State *L;
         lua_setfield(L, -2, "max");
     }
 
-    inline void LuaPush_Camera(lua_State *L, Camera cam)
+    inline static void LuaPush_Camera(lua_State *L, Camera cam)
     {
         lua_createtable(L, 0, 4);
         LuaPush_Vector3(L, cam.position);
@@ -787,7 +787,7 @@ extern lua_State *L;
         lua_setfield(L, -2, "fovy");
     }
 
-    inline void LuaPush_Camera2D(lua_State *L, Camera2D cam)
+    inline static void LuaPush_Camera2D(lua_State *L, Camera2D cam)
     {
         lua_createtable(L, 0, 4);
         LuaPush_Vector2(L, cam.offset);
@@ -824,7 +824,7 @@ extern lua_State *L;
     }
     */
 
-    inline void LuaPush_Model(lua_State *L, Model mdl)
+    inline static void LuaPush_Model(lua_State *L, Model mdl)
     {
         assert(0 && "Unsupported");
         /*
@@ -841,48 +841,48 @@ extern lua_State *L;
     //----------------------------------------------------------------------------------
     // raylib Lua Structure constructors
     //----------------------------------------------------------------------------------
-    static inline int lua_Color(lua_State *L)
+    inline static int lua_Color(lua_State *L)
     {
         LuaPush_Color(L, (Color){(unsigned char)luaL_checkinteger(L, 1), (unsigned char)luaL_checkinteger(L, 2),
                                  (unsigned char)luaL_checkinteger(L, 3), (unsigned char)luaL_checkinteger(L, 4)});
         return 1;
     }
 
-    static inline int lua_Vector2(lua_State *L)
+    inline static int lua_Vector2(lua_State *L)
     {
         LuaPush_Vector2(L, (Vector2){(float)luaL_checknumber(L, 1), (float)luaL_checknumber(L, 2)});
         return 1;
     }
 
-    static inline int lua_Vector3(lua_State *L)
+    inline static int lua_Vector3(lua_State *L)
     {
         LuaPush_Vector3(
             L, (Vector3){(float)luaL_checknumber(L, 1), (float)luaL_checknumber(L, 2), (float)luaL_checknumber(L, 3)});
         return 1;
     }
 
-    static inline int lua_Vector4(lua_State *L)
+    inline static int lua_Vector4(lua_State *L)
     {
         LuaPush_Vector4(L, (Vector4){(float)luaL_checknumber(L, 1), (float)luaL_checknumber(L, 2),
                                      (float)luaL_checknumber(L, 3), (float)luaL_checknumber(L, 4)});
         return 1;
     }
 
-    static inline int lua_Quaternion(lua_State *L)
+    inline static int lua_Quaternion(lua_State *L)
     {
         LuaPush_Quaternion(L, (Quaternion){(float)luaL_checknumber(L, 1), (float)luaL_checknumber(L, 2),
                                            (float)luaL_checknumber(L, 3), (float)luaL_checknumber(L, 4)});
         return 1;
     }
 
-    static inline int lua_Rectangle(lua_State *L)
+    inline static int lua_Rectangle(lua_State *L)
     {
         LuaPush_Rectangle(L, (Rectangle){(float)luaL_checknumber(L, 1), (float)luaL_checknumber(L, 2),
                                          (float)luaL_checknumber(L, 3), (float)luaL_checknumber(L, 4)});
         return 1;
     }
 
-    static inline int lua_Ray(lua_State *L)
+    inline static int lua_Ray(lua_State *L)
     {
         Vector3 pos = LuaGetArgument_Vector3(L, 1);
         Vector3 dir = LuaGetArgument_Vector3(L, 2);
@@ -890,7 +890,7 @@ extern lua_State *L;
         return 1;
     }
 
-    static inline int lua_RayHitInfo(lua_State *L)
+    inline static int lua_RayHitInfo(lua_State *L)
     {
         int hit = LuaGetArgument_int(L, 1);
         float dis = LuaGetArgument_float(L, 2);
@@ -900,7 +900,7 @@ extern lua_State *L;
         return 1;
     }
 
-    static inline int lua_BoundingBox(lua_State *L)
+    inline static int lua_BoundingBox(lua_State *L)
     {
         Vector3 min = LuaGetArgument_Vector3(L, 1);
         Vector3 max = LuaGetArgument_Vector3(L, 2);
@@ -908,7 +908,7 @@ extern lua_State *L;
         return 1;
     }
 
-    static inline int lua_Camera(lua_State *L)
+    inline static int lua_Camera(lua_State *L)
     {
         Vector3 pos = LuaGetArgument_Vector3(L, 1);
         Vector3 tar = LuaGetArgument_Vector3(L, 2);
@@ -918,7 +918,7 @@ extern lua_State *L;
         return 1;
     }
 
-    static inline int lua_Camera2D(lua_State *L)
+    inline static int lua_Camera2D(lua_State *L)
     {
         Vector2 off = LuaGetArgument_Vector2(L, 1);
         Vector2 tar = LuaGetArgument_Vector2(L, 2);
@@ -939,7 +939,7 @@ extern lua_State *L;
     //------------------------------------------------------------------------------------
 
     // Initialize window and OpenGL context
-    inline int lua_InitWindow(lua_State *L)
+    inline static int lua_InitWindow(lua_State *L)
     {
         int width = LuaGetArgument_int(L, 1);
         int height = LuaGetArgument_int(L, 2);
@@ -949,14 +949,14 @@ extern lua_State *L;
     }
 
     // Close window and unload OpenGL context
-    inline int lua_CloseWindow(lua_State *L)
+    inline static int lua_CloseWindow(lua_State *L)
     {
         CloseWindow();
         return 0;
     }
 
     // Check if window has been initialized successfully
-    inline int lua_IsWindowReady(lua_State *L)
+    inline static int lua_IsWindowReady(lua_State *L)
     {
         bool result = IsWindowReady();
         LuaPush_bool(L, result);
@@ -964,7 +964,7 @@ extern lua_State *L;
     }
 
     // Check if KEY_ESCAPE pressed or Close icon pressed
-    inline int lua_WindowShouldClose(lua_State *L)
+    inline static int lua_WindowShouldClose(lua_State *L)
     {
         bool result = WindowShouldClose();
         LuaPush_bool(L, result);
@@ -972,7 +972,7 @@ extern lua_State *L;
     }
 
     // Check if window has been minimized (or lost focus)
-    inline int lua_IsWindowMinimized(lua_State *L)
+    inline static int lua_IsWindowMinimized(lua_State *L)
     {
         bool result = IsWindowMinimized();
         LuaPush_bool(L, result);
@@ -980,14 +980,14 @@ extern lua_State *L;
     }
 
     // Toggle fullscreen mode (only PLATFORM_DESKTOP)
-    inline int lua_ToggleFullscreen(lua_State *L)
+    inline static int lua_ToggleFullscreen(lua_State *L)
     {
         ToggleFullscreen();
         return 0;
     }
 
     // Set icon for window (only PLATFORM_DESKTOP)
-    inline int lua_SetWindowIcon(lua_State *L)
+    inline static int lua_SetWindowIcon(lua_State *L)
     {
         Image image = LuaGetArgument_Image(L, 1);
         SetWindowIcon(image);
@@ -995,7 +995,7 @@ extern lua_State *L;
     }
 
     // Set title for window (only PLATFORM_DESKTOP)
-    inline int lua_SetWindowTitle(lua_State *L)
+    inline static int lua_SetWindowTitle(lua_State *L)
     {
         const char *title = LuaGetArgument_string(L, 1);
         SetWindowTitle(title);
@@ -1003,7 +1003,7 @@ extern lua_State *L;
     }
 
     // Set window position on screen (only PLATFORM_DESKTOP)
-    inline int lua_SetWindowPosition(lua_State *L)
+    inline static int lua_SetWindowPosition(lua_State *L)
     {
         int x = LuaGetArgument_int(L, 1);
         int y = LuaGetArgument_int(L, 2);
@@ -1012,7 +1012,7 @@ extern lua_State *L;
     }
 
     // Set monitor for the current window (fullscreen mode)
-    inline int lua_SetWindowMonitor(lua_State *L)
+    inline static int lua_SetWindowMonitor(lua_State *L)
     {
         int monitor = LuaGetArgument_int(L, 1);
         SetWindowMonitor(monitor);
@@ -1020,7 +1020,7 @@ extern lua_State *L;
     }
 
     // Set window minimum dimensions (for FLAG_WINDOW_RESIZABLE)
-    inline int lua_SetWindowMinSize(lua_State *L)
+    inline static int lua_SetWindowMinSize(lua_State *L)
     {
         int width = LuaGetArgument_int(L, 1);
         int height = LuaGetArgument_int(L, 2);
@@ -1029,7 +1029,7 @@ extern lua_State *L;
     }
 
     // Set window dimensions
-    inline int lua_SetWindowSize(lua_State *L)
+    inline static int lua_SetWindowSize(lua_State *L)
     {
         int width = LuaGetArgument_int(L, 1);
         int height = LuaGetArgument_int(L, 2);
@@ -1038,7 +1038,7 @@ extern lua_State *L;
     }
 
     // Get current screen width
-    inline int lua_GetScreenWidth(lua_State *L)
+    inline static int lua_GetScreenWidth(lua_State *L)
     {
         int result = GetScreenWidth();
         LuaPush_int(L, result);
@@ -1046,7 +1046,7 @@ extern lua_State *L;
     }
 
     // Get current screen height
-    inline int lua_GetScreenHeight(lua_State *L)
+    inline static int lua_GetScreenHeight(lua_State *L)
     {
         int result = GetScreenHeight();
         LuaPush_int(L, result);
@@ -1055,21 +1055,21 @@ extern lua_State *L;
 
     // Cursor-related functions
     // Shows cursor
-    inline int lua_ShowCursor(lua_State *L)
+    inline static int lua_ShowCursor(lua_State *L)
     {
         ShowCursor();
         return 0;
     }
 
     // Hides cursor
-    inline int lua_HideCursor(lua_State *L)
+    inline static int lua_HideCursor(lua_State *L)
     {
         HideCursor();
         return 0;
     }
 
     // Check if cursor is not visible
-    inline int lua_IsCursorHidden(lua_State *L)
+    inline static int lua_IsCursorHidden(lua_State *L)
     {
         bool result = IsCursorHidden();
         LuaPush_bool(L, result);
@@ -1077,14 +1077,14 @@ extern lua_State *L;
     }
 
     // Enables cursor (unlock cursor)
-    inline int lua_EnableCursor(lua_State *L)
+    inline static int lua_EnableCursor(lua_State *L)
     {
         EnableCursor();
         return 0;
     }
 
     // Disables cursor (lock cursor)
-    inline int lua_DisableCursor(lua_State *L)
+    inline static int lua_DisableCursor(lua_State *L)
     {
         DisableCursor();
         return 0;
@@ -1092,7 +1092,7 @@ extern lua_State *L;
 
     // Drawing-related functions
     // Set background color (framebuffer clear color)
-    inline int lua_ClearBackground(lua_State *L)
+    inline static int lua_ClearBackground(lua_State *L)
     {
         Color color = LuaGetArgument_Color(L, 1);
         ClearBackground(color);
@@ -1100,21 +1100,21 @@ extern lua_State *L;
     }
 
     // Setup canvas (framebuffer) to start drawing
-    inline int lua_BeginDrawing(lua_State *L)
+    inline static int lua_BeginDrawing(lua_State *L)
     {
         BeginDrawing();
         return 0;
     }
 
     // End canvas drawing and swap buffers (double buffering)
-    inline int lua_EndDrawing(lua_State *L)
+    inline static int lua_EndDrawing(lua_State *L)
     {
         EndDrawing();
         return 0;
     }
 
     // Initialize 2D mode with custom camera (2D)
-    inline int lua_BeginMode2D(lua_State *L)
+    inline static int lua_BeginMode2D(lua_State *L)
     {
         Camera2D camera = LuaGetArgument_Camera2D(L, 1);
         BeginMode2D(camera);
@@ -1122,14 +1122,14 @@ extern lua_State *L;
     }
 
     // Ends 2D mode with custom camera
-    inline int lua_EndMode2D(lua_State *L)
+    inline static int lua_EndMode2D(lua_State *L)
     {
         EndMode2D();
         return 0;
     }
 
     // Initializes 3D mode with custom camera (3D)
-    inline int lua_BeginMode3D(lua_State *L)
+    inline static int lua_BeginMode3D(lua_State *L)
     {
         assert(0 && "not implemented");
         /*
@@ -1140,14 +1140,14 @@ extern lua_State *L;
     }
 
     // Ends 3D mode and returns to default 2D orthographic mode
-    inline int lua_EndMode3D(lua_State *L)
+    inline static int lua_EndMode3D(lua_State *L)
     {
         EndMode3D();
         return 0;
     }
 
     // Initializes render texture for drawing
-    inline int lua_BeginTextureMode(lua_State *L)
+    inline static int lua_BeginTextureMode(lua_State *L)
     {
         RenderTexture2D target = LuaGetArgument_RenderTexture2D(L, 1);
         BeginTextureMode(target);
@@ -1155,7 +1155,7 @@ extern lua_State *L;
     }
 
     // Ends drawing to render texture
-    inline int lua_EndTextureMode(lua_State *L)
+    inline static int lua_EndTextureMode(lua_State *L)
     {
         EndTextureMode();
         return 0;
@@ -1163,7 +1163,7 @@ extern lua_State *L;
 
     // Screen-space-related functions
     // Returns a ray trace from mouse position
-    inline int lua_GetMouseRay(lua_State *L)
+    inline static int lua_GetMouseRay(lua_State *L)
     {
         Vector2 mousePosition = LuaGetArgument_Vector2(L, 1);
         Camera camera = LuaGetArgument_Camera(L, 2);
@@ -1173,7 +1173,7 @@ extern lua_State *L;
     }
 
     // Returns the screen space position for a 3d world space position
-    inline int lua_GetWorldToScreen(lua_State *L)
+    inline static int lua_GetWorldToScreen(lua_State *L)
     {
         Vector3 position = LuaGetArgument_Vector3(L, 1);
         Camera camera = LuaGetArgument_Camera(L, 2);
@@ -1183,7 +1183,7 @@ extern lua_State *L;
     }
 
     // Returns camera transform matrix (view matrix)
-    inline int lua_GetCameraMatrix(lua_State *L)
+    inline static int lua_GetCameraMatrix(lua_State *L)
     {
         Camera camera = LuaGetArgument_Camera(L, 1);
         Matrix result = GetCameraMatrix(camera);
@@ -1193,7 +1193,7 @@ extern lua_State *L;
 
     // Timming-related functions
     // Set target FPS (maximum)
-    inline int lua_SetTargetFPS(lua_State *L)
+    inline static int lua_SetTargetFPS(lua_State *L)
     {
         int fps = LuaGetArgument_int(L, 1);
         SetTargetFPS(fps);
@@ -1201,7 +1201,7 @@ extern lua_State *L;
     }
 
     // Returns current FPS
-    inline int lua_GetFPS(lua_State *L)
+    inline static int lua_GetFPS(lua_State *L)
     {
         int result = GetFPS();
         LuaPush_int(L, result);
@@ -1209,7 +1209,7 @@ extern lua_State *L;
     }
 
     // Returns time in seconds for last frame drawn
-    inline int lua_GetFrameTime(lua_State *L)
+    inline static int lua_GetFrameTime(lua_State *L)
     {
         float result = GetFrameTime();
         LuaPush_float(L, result);
@@ -1217,7 +1217,7 @@ extern lua_State *L;
     }
 
     // Returns elapsed time in seconds since InitWindow()
-    inline int lua_GetTime(lua_State *L)
+    inline static int lua_GetTime(lua_State *L)
     {
         float result = (float)GetTime();
         LuaPush_float(L, result);
@@ -1226,7 +1226,7 @@ extern lua_State *L;
 
     // Color-related functions
     // Returns hexadecimal value for a Color
-    inline int lua_ColorToInt(lua_State *L)
+    inline static int lua_ColorToInt(lua_State *L)
     {
         Color color = LuaGetArgument_Color(L, 1);
         int result = ColorToInt(color);
@@ -1234,7 +1234,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_ColorAlpha(lua_State *L)
+    inline static int lua_ColorAlpha(lua_State *L)
     {
         Color color = LuaGetArgument_Color(L, 1);
         color = ColorAlpha(color, LuaGetArgument_float(L, 2));
@@ -1242,7 +1242,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_ColorBrightness(lua_State *L)
+    inline static int lua_ColorBrightness(lua_State *L)
     {
         Color color = LuaGetArgument_Color(L, 1);
         color = ColorBrightness(color, LuaGetArgument_float(L, 2));
@@ -1251,7 +1251,7 @@ extern lua_State *L;
     }
 
     // Returns color normalized as float [0..1]
-    inline int lua_ColorNormalize(lua_State *L)
+    inline static int lua_ColorNormalize(lua_State *L)
     {
         Color color = LuaGetArgument_Color(L, 1);
         Vector4 result = ColorNormalize(color);
@@ -1260,7 +1260,7 @@ extern lua_State *L;
     }
 
     // Returns color from normalized Vector4
-    inline int lua_ColorFromNormalized(lua_State *L)
+    inline static int lua_ColorFromNormalized(lua_State *L)
     {
         Vector4 v4 = LuaGetArgument_Vector4(L, 1);
         Color col = ColorFromNormalized(v4);
@@ -1269,7 +1269,7 @@ extern lua_State *L;
     }
 
     // Returns HSV values for a Color
-    inline int lua_ColorToHSV(lua_State *L)
+    inline static int lua_ColorToHSV(lua_State *L)
     {
         Color color = LuaGetArgument_Color(L, 1);
         Vector3 result = ColorToHSV(color);
@@ -1278,7 +1278,7 @@ extern lua_State *L;
     }
 
     // Returns a Color struct from hexadecimal value
-    inline int lua_GetColor(lua_State *L)
+    inline static int lua_GetColor(lua_State *L)
     {
         int hexValue = LuaGetArgument_int(L, 1);
         Color result = GetColor(hexValue);
@@ -1287,7 +1287,7 @@ extern lua_State *L;
     }
 
     // Color fade-in or fade-out, alpha goes from 0.0f to 1.0f
-    inline int lua_Fade(lua_State *L)
+    inline static int lua_Fade(lua_State *L)
     {
         Color color = LuaGetArgument_Color(L, 1);
         float alpha = LuaGetArgument_float(L, 2);
@@ -1299,7 +1299,7 @@ extern lua_State *L;
     // Misc. functions
 
     // Setup window configuration flags (view FLAGS)
-    inline int lua_SetConfigFlags(lua_State *L)
+    inline static int lua_SetConfigFlags(lua_State *L)
     {
         unsigned char flags = LuaGetArgument_unsigned(L, 1);
         SetConfigFlags(flags);
@@ -1307,7 +1307,7 @@ extern lua_State *L;
     }
 
     // Enable trace log message types (bit flags based)
-    inline int lua_SetTraceLog(lua_State *L)
+    inline static int lua_SetTraceLog(lua_State *L)
     {
         unsigned char types = LuaGetArgument_unsigned(L, 1);
         SetTraceLogLevel(types);
@@ -1324,7 +1324,7 @@ extern lua_State *L;
         lua_call(L, 0, 0);
     }
 
-    inline int lua_SetDrawingLoop(lua_State* L)
+    inline static int lua_SetDrawingLoop(lua_State* L)
     {
         luaL_argcheck(L, lua_isfunction(L, 1), 1, "Loop function expected");
         lua_pushvalue(L, 1);
@@ -1334,7 +1334,7 @@ extern lua_State *L;
     }
     #else
     // Set target FPS (maximum)
-    inline int lua_SetTargetFPS(lua_State* L)
+    inline static int lua_SetTargetFPS(lua_State* L)
     {
         int arg1 = LuaGetArgument_int(L, 1);
         SetTargetFPS(arg1);
@@ -1345,7 +1345,7 @@ extern lua_State *L;
 
     /*
     // Converts Color to float array and normalizes
-    inline int lua_ColorToFloat(lua_State* L)
+    inline static int lua_ColorToFloat(lua_State* L)
     {
         Color arg1 = LuaGetArgument_Color(L, 1);
         float *result = ColorToFloat(arg1);
@@ -1360,7 +1360,7 @@ extern lua_State *L;
     }
 
     // Converts Vector3 to float array
-    inline int lua_VectorToFloat(lua_State* L)
+    inline static int lua_VectorToFloat(lua_State* L)
     {
         Vector3 arg1 = LuaGetArgument_Vector3(L, 1);
         float *result = VectorToFloat(arg1);
@@ -1375,7 +1375,7 @@ extern lua_State *L;
     }
 
     // Converts Matrix to float array
-    inline int lua_MatrixToFloat(lua_State* L)
+    inline static int lua_MatrixToFloat(lua_State* L)
     {
         Matrix arg1 = LuaGetArgument_Matrix(L, 1);
         float *result = MatrixToFloat(arg1);
@@ -1391,7 +1391,7 @@ extern lua_State *L;
     */
 
     // Returns a random value between min and max (both included)
-    inline int lua_GetRandomValue(lua_State *L)
+    inline static int lua_GetRandomValue(lua_State *L)
     {
         int min = LuaGetArgument_int(L, 1);
         int max = LuaGetArgument_int(L, 2);
@@ -1401,7 +1401,7 @@ extern lua_State *L;
     }
 
     // Detect if a key has been pressed once
-    inline int lua_IsKeyPressed(lua_State *L)
+    inline static int lua_IsKeyPressed(lua_State *L)
     {
         int key = LuaGetArgument_int(L, 1);
         bool result = IsKeyPressed(key);
@@ -1410,7 +1410,7 @@ extern lua_State *L;
     }
 
     // Detect if a key is being pressed
-    inline int lua_IsKeyDown(lua_State *L)
+    inline static int lua_IsKeyDown(lua_State *L)
     {
         int key = LuaGetArgument_int(L, 1);
         bool result = IsKeyDown(key);
@@ -1419,7 +1419,7 @@ extern lua_State *L;
     }
 
     // Detect if a key has been released once
-    inline int lua_IsKeyReleased(lua_State *L)
+    inline static int lua_IsKeyReleased(lua_State *L)
     {
         int key = LuaGetArgument_int(L, 1);
         bool result = IsKeyReleased(key);
@@ -1428,7 +1428,7 @@ extern lua_State *L;
     }
 
     // Detect if a key is NOT being pressed
-    inline int lua_IsKeyUp(lua_State *L)
+    inline static int lua_IsKeyUp(lua_State *L)
     {
         int key = LuaGetArgument_int(L, 1);
         bool result = IsKeyUp(key);
@@ -1437,7 +1437,7 @@ extern lua_State *L;
     }
 
     // Get latest key pressed
-    inline int lua_GetKeyPressed(lua_State *L)
+    inline static int lua_GetKeyPressed(lua_State *L)
     {
         int result = GetKeyPressed();
         LuaPush_int(L, result);
@@ -1445,7 +1445,7 @@ extern lua_State *L;
     }
 
     // Get last char pressed (ONLY ASCII SUPPORTED!!!)
-    inline int lua_GetCharPressed(lua_State *L)
+    inline static int lua_GetCharPressed(lua_State *L)
     {
         int codepoint = GetCharPressed();
         if (codepoint != 0)
@@ -1461,7 +1461,7 @@ extern lua_State *L;
     }
 
     // Set a custom key to exit program (default is ESC)
-    inline int lua_SetExitKey(lua_State *L)
+    inline static int lua_SetExitKey(lua_State *L)
     {
         int key = LuaGetArgument_int(L, 1);
         SetExitKey(key);
@@ -1470,7 +1470,7 @@ extern lua_State *L;
 
     // Input-related functions: gamepads
     // Detect if a gamepad is available
-    inline int lua_IsGamepadAvailable(lua_State *L)
+    inline static int lua_IsGamepadAvailable(lua_State *L)
     {
         int gamepad = LuaGetArgument_int(L, 1);
         bool result = IsGamepadAvailable(gamepad);
@@ -1480,7 +1480,7 @@ extern lua_State *L;
 
     // Input-related functions: mouse
     // Detect if a mouse button has been pressed once
-    inline int lua_IsMouseButtonPressed(lua_State *L)
+    inline static int lua_IsMouseButtonPressed(lua_State *L)
     {
         int button = LuaGetArgument_int(L, 1);
         bool result = IsMouseButtonPressed(button);
@@ -1489,7 +1489,7 @@ extern lua_State *L;
     }
 
     // Detect if a mouse button is being pressed
-    inline int lua_IsMouseButtonDown(lua_State *L)
+    inline static int lua_IsMouseButtonDown(lua_State *L)
     {
         int button = LuaGetArgument_int(L, 1);
         bool result = IsMouseButtonDown(button);
@@ -1498,7 +1498,7 @@ extern lua_State *L;
     }
 
     // Detect if a mouse button has been released once
-    inline int lua_IsMouseButtonReleased(lua_State *L)
+    inline static int lua_IsMouseButtonReleased(lua_State *L)
     {
         int button = LuaGetArgument_int(L, 1);
         bool result = IsMouseButtonReleased(button);
@@ -1507,7 +1507,7 @@ extern lua_State *L;
     }
 
     // Detect if a mouse button is NOT being pressed
-    inline int lua_IsMouseButtonUp(lua_State *L)
+    inline static int lua_IsMouseButtonUp(lua_State *L)
     {
         int button = LuaGetArgument_int(L, 1);
         bool result = IsMouseButtonUp(button);
@@ -1516,7 +1516,7 @@ extern lua_State *L;
     }
 
     // Returns mouse position X
-    inline int lua_GetMouseX(lua_State *L)
+    inline static int lua_GetMouseX(lua_State *L)
     {
         int result = GetMouseX();
         LuaPush_int(L, result);
@@ -1524,7 +1524,7 @@ extern lua_State *L;
     }
 
     // Returns mouse position Y
-    inline int lua_GetMouseY(lua_State *L)
+    inline static int lua_GetMouseY(lua_State *L)
     {
         int result = GetMouseY();
         LuaPush_int(L, result);
@@ -1532,7 +1532,7 @@ extern lua_State *L;
     }
 
     // Returns mouse position XY
-    inline int lua_GetMousePosition(lua_State *L)
+    inline static int lua_GetMousePosition(lua_State *L)
     {
         Vector2 result = GetMousePosition();
         LuaPush_Vector2(L, result);
@@ -1540,7 +1540,7 @@ extern lua_State *L;
     }
 
     // Set mouse position XY
-    inline int lua_SetMousePosition(lua_State *L)
+    inline static int lua_SetMousePosition(lua_State *L)
     {
         Vector2 position = LuaGetArgument_Vector2(L, 1);
         SetMousePosition(position.x, position.y);
@@ -1548,7 +1548,7 @@ extern lua_State *L;
     }
 
     // Set mouse scaling
-    inline int lua_SetMouseScale(lua_State *L)
+    inline static int lua_SetMouseScale(lua_State *L)
     {
         assert(0 && "unsupported");
         /*
@@ -1559,7 +1559,7 @@ extern lua_State *L;
     }
 
     // Returns mouse wheel movement Y
-    inline int lua_GetMouseWheelMove(lua_State *L)
+    inline static int lua_GetMouseWheelMove(lua_State *L)
     {
         int result = GetMouseWheelMove();
         LuaPush_int(L, result);
@@ -1568,7 +1568,7 @@ extern lua_State *L;
 
     // Input-related functions: touch
     // Returns touch position X for touch point 0 (relative to screen size)
-    inline int lua_GetTouchX(lua_State *L)
+    inline static int lua_GetTouchX(lua_State *L)
     {
         int result = GetTouchX();
         LuaPush_int(L, result);
@@ -1576,7 +1576,7 @@ extern lua_State *L;
     }
 
     // Returns touch position Y for touch point 0 (relative to screen size)
-    inline int lua_GetTouchY(lua_State *L)
+    inline static int lua_GetTouchY(lua_State *L)
     {
         int result = GetTouchY();
         LuaPush_int(L, result);
@@ -1584,7 +1584,7 @@ extern lua_State *L;
     }
 
     // Returns touch position XY for a touch point index (relative to screen size)
-    inline int lua_GetTouchPosition(lua_State *L)
+    inline static int lua_GetTouchPosition(lua_State *L)
     {
         int index = LuaGetArgument_int(L, 1);
         Vector2 result = GetTouchPosition(index);
@@ -1597,7 +1597,7 @@ extern lua_State *L;
     //------------------------------------------------------------------------------------
 
     // Enable a set of gestures using flags
-    inline int lua_SetGesturesEnabled(lua_State *L)
+    inline static int lua_SetGesturesEnabled(lua_State *L)
     {
         unsigned int gestureFlags = LuaGetArgument_unsigned(L, 1);
         SetGesturesEnabled(gestureFlags);
@@ -1605,7 +1605,7 @@ extern lua_State *L;
     }
 
     // Check if a gesture have been detected
-    inline int lua_IsGestureDetected(lua_State *L)
+    inline static int lua_IsGestureDetected(lua_State *L)
     {
         int gesture = LuaGetArgument_int(L, 1);
         bool result = IsGestureDetected(gesture);
@@ -1614,7 +1614,7 @@ extern lua_State *L;
     }
 
     // Get latest detected gesture
-    inline int lua_GetGestureDetected(lua_State *L)
+    inline static int lua_GetGestureDetected(lua_State *L)
     {
         int result = GetGestureDetected();
         LuaPush_int(L, result);
@@ -1622,7 +1622,7 @@ extern lua_State *L;
     }
 
     // Get touch points count
-    inline int lua_GetTouchPointsCount(lua_State *L)
+    inline static int lua_GetTouchPointsCount(lua_State *L)
     {
         int result = GetTouchPointCount();
         LuaPush_int(L, result);
@@ -1630,7 +1630,7 @@ extern lua_State *L;
     }
 
     // Get gesture hold time in milliseconds
-    inline int lua_GetGestureHoldDuration(lua_State *L)
+    inline static int lua_GetGestureHoldDuration(lua_State *L)
     {
         float result = GetGestureHoldDuration();
         LuaPush_float(L, result);
@@ -1638,7 +1638,7 @@ extern lua_State *L;
     }
 
     // Get gesture drag vector
-    inline int lua_GetGestureDragVector(lua_State *L)
+    inline static int lua_GetGestureDragVector(lua_State *L)
     {
         Vector2 result = GetGestureDragVector();
         LuaPush_Vector2(L, result);
@@ -1646,7 +1646,7 @@ extern lua_State *L;
     }
 
     // Get gesture drag angle
-    inline int lua_GetGestureDragAngle(lua_State *L)
+    inline static int lua_GetGestureDragAngle(lua_State *L)
     {
         float result = GetGestureDragAngle();
         LuaPush_float(L, result);
@@ -1654,7 +1654,7 @@ extern lua_State *L;
     }
 
     // Get gesture pinch delta
-    inline int lua_GetGesturePinchVector(lua_State *L)
+    inline static int lua_GetGesturePinchVector(lua_State *L)
     {
         Vector2 result = GetGesturePinchVector();
         LuaPush_Vector2(L, result);
@@ -1662,7 +1662,7 @@ extern lua_State *L;
     }
 
     // Get gesture pinch angle
-    inline int lua_GetGesturePinchAngle(lua_State *L)
+    inline static int lua_GetGesturePinchAngle(lua_State *L)
     {
         float result = GetGesturePinchAngle();
         LuaPush_float(L, result);
@@ -1674,7 +1674,7 @@ extern lua_State *L;
     //------------------------------------------------------------------------------------
 
     // Set camera mode (multiple camera modes available)
-    inline int lua_SetCameraMode(lua_State *L)
+    inline static int lua_SetCameraMode(lua_State *L)
     {
         assert(0 && "unsupported");
         /*
@@ -1686,7 +1686,7 @@ extern lua_State *L;
     }
 
     // Update camera position for selected mode
-    inline int lua_UpdateCamera(lua_State *L)
+    inline static int lua_UpdateCamera(lua_State *L)
     {
         assert(0 && "unsupported");
         /*
@@ -1697,7 +1697,7 @@ extern lua_State *L;
     }
 
     // Set camera pan key to combine with mouse movement (free camera)
-    inline int lua_SetCameraPanControl(lua_State *L)
+    inline static int lua_SetCameraPanControl(lua_State *L)
     {
         assert(0 && "unsupported");
         /*
@@ -1708,7 +1708,7 @@ extern lua_State *L;
     }
 
     // Set camera alt key to combine with mouse movement (free camera)
-    inline int lua_SetCameraAltControl(lua_State *L)
+    inline static int lua_SetCameraAltControl(lua_State *L)
     {
         assert(0 && "unsupported");
         /*
@@ -1719,7 +1719,7 @@ extern lua_State *L;
     }
 
     // Set camera smooth zoom key to combine with mouse (free camera)
-    inline int lua_SetCameraSmoothZoomControl(lua_State *L)
+    inline static int lua_SetCameraSmoothZoomControl(lua_State *L)
     {
         assert(0 && "unsupported");
         /*
@@ -1730,7 +1730,7 @@ extern lua_State *L;
     }
 
     // Set camera move controls (1st person and 3rd person cameras)
-    inline int lua_SetCameraMoveControls(lua_State *L)
+    inline static int lua_SetCameraMoveControls(lua_State *L)
     {
         assert(0 && "unsupported");
         /*
@@ -1750,7 +1750,7 @@ extern lua_State *L;
     //------------------------------------------------------------------------------------
 
     // Draw a pixel
-    inline int lua_DrawPixel(lua_State *L)
+    inline static int lua_DrawPixel(lua_State *L)
     {
         int posX = LuaGetArgument_int(L, 1);
         int posY = LuaGetArgument_int(L, 2);
@@ -1760,7 +1760,7 @@ extern lua_State *L;
     }
 
     // Draw a pixel (Vector version)
-    inline int lua_DrawPixelV(lua_State *L)
+    inline static int lua_DrawPixelV(lua_State *L)
     {
         Vector2 position = LuaGetArgument_Vector2(L, 1);
         Color color = LuaGetArgument_Color(L, 2);
@@ -1769,7 +1769,7 @@ extern lua_State *L;
     }
 
     // Draw a line
-    inline int lua_DrawLine(lua_State *L)
+    inline static int lua_DrawLine(lua_State *L)
     {
         int startPosX = LuaGetArgument_int(L, 1);
         int startPosY = LuaGetArgument_int(L, 2);
@@ -1781,7 +1781,7 @@ extern lua_State *L;
     }
 
     // Draw a line (Vector version)
-    inline int lua_DrawLineV(lua_State *L)
+    inline static int lua_DrawLineV(lua_State *L)
     {
         Vector2 startPos = LuaGetArgument_Vector2(L, 1);
         Vector2 endPos = LuaGetArgument_Vector2(L, 2);
@@ -1791,7 +1791,7 @@ extern lua_State *L;
     }
 
     // Draw a line defining thickness
-    inline int lua_DrawLineEx(lua_State *L)
+    inline static int lua_DrawLineEx(lua_State *L)
     {
         Vector2 startPos = LuaGetArgument_Vector2(L, 1);
         Vector2 endPos = LuaGetArgument_Vector2(L, 2);
@@ -1802,7 +1802,7 @@ extern lua_State *L;
     }
 
     // Draw a line using cubic-bezier curves in-out
-    inline int lua_DrawLineBezier(lua_State *L)
+    inline static int lua_DrawLineBezier(lua_State *L)
     {
         Vector2 startPos = LuaGetArgument_Vector2(L, 1);
         Vector2 endPos = LuaGetArgument_Vector2(L, 2);
@@ -1813,7 +1813,7 @@ extern lua_State *L;
     }
 
     // Draw a color-filled circle
-    inline int lua_DrawCircle(lua_State *L)
+    inline static int lua_DrawCircle(lua_State *L)
     {
         int centerX = LuaGetArgument_int(L, 1);
         int centerY = LuaGetArgument_int(L, 2);
@@ -1824,7 +1824,7 @@ extern lua_State *L;
     }
 
     // Draw a gradient-filled circle
-    inline int lua_DrawCircleGradient(lua_State *L)
+    inline static int lua_DrawCircleGradient(lua_State *L)
     {
         int centerX = LuaGetArgument_int(L, 1);
         int centerY = LuaGetArgument_int(L, 2);
@@ -1836,7 +1836,7 @@ extern lua_State *L;
     }
 
     // Draw a color-filled circle (Vector version)
-    inline int lua_DrawCircleV(lua_State *L)
+    inline static int lua_DrawCircleV(lua_State *L)
     {
         Vector2 center = LuaGetArgument_Vector2(L, 1);
         float radius = LuaGetArgument_float(L, 2);
@@ -1846,7 +1846,7 @@ extern lua_State *L;
     }
 
     // Draw circle outline
-    inline int lua_DrawCircleLines(lua_State *L)
+    inline static int lua_DrawCircleLines(lua_State *L)
     {
         int centerX = LuaGetArgument_int(L, 1);
         int centerY = LuaGetArgument_int(L, 2);
@@ -1857,7 +1857,7 @@ extern lua_State *L;
     }
 
     // Draw a color-filled rectangle
-    inline int lua_DrawRectangle(lua_State *L)
+    inline static int lua_DrawRectangle(lua_State *L)
     {
         int posX = LuaGetArgument_int(L, 1);
         int posY = LuaGetArgument_int(L, 2);
@@ -1869,7 +1869,7 @@ extern lua_State *L;
     }
 
     // Draw a color-filled rectangle (Vector version)
-    inline int lua_DrawRectangleV(lua_State *L)
+    inline static int lua_DrawRectangleV(lua_State *L)
     {
         Vector2 position = LuaGetArgument_Vector2(L, 1);
         Vector2 size = LuaGetArgument_Vector2(L, 2);
@@ -1879,7 +1879,7 @@ extern lua_State *L;
     }
 
     // Draw a color-filled rectangle
-    inline int lua_DrawRectangleRec(lua_State *L)
+    inline static int lua_DrawRectangleRec(lua_State *L)
     {
         Rectangle rec = LuaGetArgument_Rectangle(L, 1);
         Color color = LuaGetArgument_Color(L, 2);
@@ -1887,7 +1887,7 @@ extern lua_State *L;
         return 0;
     }
 
-    inline int lua_DrawRectangleRounded(lua_State *L)
+    inline static int lua_DrawRectangleRounded(lua_State *L)
     {
         Rectangle rec = LuaGetArgument_Rectangle(L, 1);
         float roundness = LuaGetArgument_float(L, 2);
@@ -1897,7 +1897,7 @@ extern lua_State *L;
         return 0;
     }
 
-    inline int lua_DrawRectangleRoundedLines()
+    inline static int lua_DrawRectangleRoundedLines()
     {
         Rectangle rec = LuaGetArgument_Rectangle(L, 1);
         float roundness = LuaGetArgument_float(L, 2);
@@ -1907,7 +1907,7 @@ extern lua_State *L;
         return 0;
     }
 
-    inline int lua_DrawRectangleRoundedLinesEx()
+    inline static int lua_DrawRectangleRoundedLinesEx()
     {
         Rectangle rec = LuaGetArgument_Rectangle(L, 1);
         float roundness = LuaGetArgument_float(L, 2);
@@ -1919,7 +1919,7 @@ extern lua_State *L;
     }
 
     // Draw a color-filled rectangle with pro parameters
-    inline int lua_DrawRectanglePro(lua_State *L)
+    inline static int lua_DrawRectanglePro(lua_State *L)
     {
         Rectangle rec = LuaGetArgument_Rectangle(L, 1);
         Vector2 origin = LuaGetArgument_Vector2(L, 2);
@@ -1930,7 +1930,7 @@ extern lua_State *L;
     }
 
     // Draw a vertical-gradient-filled rectangle
-    inline int lua_DrawRectangleGradientV(lua_State *L)
+    inline static int lua_DrawRectangleGradientV(lua_State *L)
     {
         int posX = LuaGetArgument_int(L, 1);
         int posY = LuaGetArgument_int(L, 2);
@@ -1943,7 +1943,7 @@ extern lua_State *L;
     }
 
     // Draw a horizontal-gradient-filled rectangle
-    inline int lua_DrawRectangleGradientH(lua_State *L)
+    inline static int lua_DrawRectangleGradientH(lua_State *L)
     {
         int posX = LuaGetArgument_int(L, 1);
         int posY = LuaGetArgument_int(L, 2);
@@ -1956,7 +1956,7 @@ extern lua_State *L;
     }
 
     // Draw a gradient-filled rectangle with custom vertex colors
-    inline int lua_DrawRectangleGradientEx(lua_State *L)
+    inline static int lua_DrawRectangleGradientEx(lua_State *L)
     {
         Rectangle rec = LuaGetArgument_Rectangle(L, 1);
         Color col1 = LuaGetArgument_Color(L, 2);
@@ -1968,7 +1968,7 @@ extern lua_State *L;
     }
 
     // Draw rectangle outline
-    inline int lua_DrawRectangleLines(lua_State *L)
+    inline static int lua_DrawRectangleLines(lua_State *L)
     {
         int posX = LuaGetArgument_int(L, 1);
         int posY = LuaGetArgument_int(L, 2);
@@ -1980,7 +1980,7 @@ extern lua_State *L;
     }
 
     // Draw rectangle outline with extended parameters
-    inline int lua_DrawRectangleLinesEx(lua_State *L)
+    inline static int lua_DrawRectangleLinesEx(lua_State *L)
     {
         Rectangle rec = LuaGetArgument_Rectangle(L, 1);
         int lineThick = LuaGetArgument_int(L, 2);
@@ -1990,7 +1990,7 @@ extern lua_State *L;
     }
 
     // Draw a color-filled triangle
-    inline int lua_DrawTriangle(lua_State *L)
+    inline static int lua_DrawTriangle(lua_State *L)
     {
         Vector2 v1 = LuaGetArgument_Vector2(L, 1);
         Vector2 v2 = LuaGetArgument_Vector2(L, 2);
@@ -2001,7 +2001,7 @@ extern lua_State *L;
     }
 
     // Draw triangle outline
-    inline int lua_DrawTriangleLines(lua_State *L)
+    inline static int lua_DrawTriangleLines(lua_State *L)
     {
         Vector2 v1 = LuaGetArgument_Vector2(L, 1);
         Vector2 v2 = LuaGetArgument_Vector2(L, 2);
@@ -2012,7 +2012,7 @@ extern lua_State *L;
     }
 
     // Draw a regular polygon (Vector version)
-    inline int lua_DrawPoly(lua_State *L)
+    inline static int lua_DrawPoly(lua_State *L)
     {
         Vector2 center = LuaGetArgument_Vector2(L, 1);
         int sides = LuaGetArgument_int(L, 2);
@@ -2024,7 +2024,7 @@ extern lua_State *L;
     }
 
     // Check collision between two rectangles
-    inline int lua_CheckCollisionRecs(lua_State *L)
+    inline static int lua_CheckCollisionRecs(lua_State *L)
     {
         Rectangle rec1 = LuaGetArgument_Rectangle(L, 1);
         Rectangle rec2 = LuaGetArgument_Rectangle(L, 2);
@@ -2034,7 +2034,7 @@ extern lua_State *L;
     }
 
     // Check collision between two circles
-    inline int lua_CheckCollisionCircles(lua_State *L)
+    inline static int lua_CheckCollisionCircles(lua_State *L)
     {
         Vector2 center1 = LuaGetArgument_Vector2(L, 1);
         float radius1 = LuaGetArgument_float(L, 2);
@@ -2046,7 +2046,7 @@ extern lua_State *L;
     }
 
     // Check collision between circle and rectangle
-    inline int lua_CheckCollisionCircleRec(lua_State *L)
+    inline static int lua_CheckCollisionCircleRec(lua_State *L)
     {
         Vector2 center = LuaGetArgument_Vector2(L, 1);
         float radius = LuaGetArgument_float(L, 2);
@@ -2057,7 +2057,7 @@ extern lua_State *L;
     }
 
     // Get collision rectangle for two rectangles collision
-    inline int lua_GetCollisionRec(lua_State *L)
+    inline static int lua_GetCollisionRec(lua_State *L)
     {
         Rectangle rec1 = LuaGetArgument_Rectangle(L, 1);
         Rectangle rec2 = LuaGetArgument_Rectangle(L, 2);
@@ -2067,7 +2067,7 @@ extern lua_State *L;
     }
 
     // Check if point is inside rectangle
-    inline int lua_CheckCollisionPointRec(lua_State *L)
+    inline static int lua_CheckCollisionPointRec(lua_State *L)
     {
         Vector2 point = LuaGetArgument_Vector2(L, 1);
         Rectangle rec = LuaGetArgument_Rectangle(L, 2);
@@ -2077,7 +2077,7 @@ extern lua_State *L;
     }
 
     // Check if point is inside circle
-    inline int lua_CheckCollisionPointCircle(lua_State *L)
+    inline static int lua_CheckCollisionPointCircle(lua_State *L)
     {
         Vector2 point = LuaGetArgument_Vector2(L, 1);
         Vector2 center = LuaGetArgument_Vector2(L, 2);
@@ -2088,7 +2088,7 @@ extern lua_State *L;
     }
 
     // Check if point is inside a triangle
-    inline int lua_CheckCollisionPointTriangle(lua_State *L)
+    inline static int lua_CheckCollisionPointTriangle(lua_State *L)
     {
         Vector2 point = LuaGetArgument_Vector2(L, 1);
         Vector2 p1 = LuaGetArgument_Vector2(L, 2);
@@ -2104,7 +2104,7 @@ extern lua_State *L;
     //------------------------------------------------------------------------------------
 
     // Load texture from file into GPU memory (VRAM)
-    inline int lua_LoadTexture(lua_State *L)
+    inline static int lua_LoadTexture(lua_State *L)
     {
         const char *fileName = LuaGetArgument_string(L, 1);
         Texture2D result = LoadTexture(fileName);
@@ -2113,7 +2113,7 @@ extern lua_State *L;
     }
 
     // Load texture from image data
-    inline int lua_LoadTextureFromImage(lua_State *L)
+    inline static int lua_LoadTextureFromImage(lua_State *L)
     {
         Image image = LuaGetArgument_Image(L, 1);
         Texture2D result = LoadTextureFromImage(image);
@@ -2122,7 +2122,7 @@ extern lua_State *L;
     }
 
     // Load texture for rendering (framebuffer)
-    inline int lua_LoadRenderTexture(lua_State *L)
+    inline static int lua_LoadRenderTexture(lua_State *L)
     {
         int width = LuaGetArgument_int(L, 1);
         int height = LuaGetArgument_int(L, 2);
@@ -2132,7 +2132,7 @@ extern lua_State *L;
     }
 
     // Unload image from CPU memory (RAM)
-    inline int lua_UnloadImage(lua_State *L)
+    inline static int lua_UnloadImage(lua_State *L)
     {
         Image image = LuaGetArgument_Image(L, 1);
         UnloadImage(image);
@@ -2140,7 +2140,7 @@ extern lua_State *L;
     }
 
     // Unload texture from GPU memory (VRAM)
-    inline int lua_UnloadTexture(lua_State *L)
+    inline static int lua_UnloadTexture(lua_State *L)
     {
         Texture2D texture = LuaGetArgument_Texture2D(L, 1);
         UnloadTexture(texture);
@@ -2148,7 +2148,7 @@ extern lua_State *L;
     }
 
     // Unload render texture from GPU memory (VRAM)
-    inline int lua_UnloadRenderTexture(lua_State *L)
+    inline static int lua_UnloadRenderTexture(lua_State *L)
     {
         RenderTexture2D target = LuaGetArgument_RenderTexture2D(L, 1);
         UnloadRenderTexture(target);
@@ -2156,7 +2156,7 @@ extern lua_State *L;
     }
 
     // WARNING: Update GPU texture with new data
-    inline int lua_UpdateTexture(lua_State *L)
+    inline static int lua_UpdateTexture(lua_State *L)
     {
         // TODO: arg2 parameters is a void pointer...
 
@@ -2172,7 +2172,7 @@ extern lua_State *L;
     //----------------------------------------------------------------------------------
 
     // Create an image duplicate (useful for transformations)
-    inline int lua_ImageCopy(lua_State *L)
+    inline static int lua_ImageCopy(lua_State *L)
     {
         Image image = LuaGetArgument_Image(L, 1);
         Image result = ImageCopy(image);
@@ -2183,7 +2183,7 @@ extern lua_State *L;
     // Texture2D drawing functions
 
     // Draw a Texture2D
-    inline int lua_DrawTexture(lua_State *L)
+    inline static int lua_DrawTexture(lua_State *L)
     {
         Texture2D texture = LuaGetArgument_Texture2D(L, 1);
         int posX = LuaGetArgument_int(L, 2);
@@ -2194,7 +2194,7 @@ extern lua_State *L;
     }
 
     // Draw a Texture2D with position defined as Vector2
-    inline int lua_DrawTextureV(lua_State *L)
+    inline static int lua_DrawTextureV(lua_State *L)
     {
         Texture2D texture = LuaGetArgument_Texture2D(L, 1);
         Vector2 position = LuaGetArgument_Vector2(L, 2);
@@ -2204,7 +2204,7 @@ extern lua_State *L;
     }
 
     // Draw a Texture2D with extended parameters
-    inline int lua_DrawTextureEx(lua_State *L)
+    inline static int lua_DrawTextureEx(lua_State *L)
     {
         Texture2D texture = LuaGetArgument_Texture2D(L, 1);
         Vector2 position = LuaGetArgument_Vector2(L, 2);
@@ -2216,7 +2216,7 @@ extern lua_State *L;
     }
 
     // Draw a part of a texture defined by a rectangle
-    inline int lua_DrawTextureRec(lua_State *L)
+    inline static int lua_DrawTextureRec(lua_State *L)
     {
         Texture2D texture = LuaGetArgument_Texture2D(L, 1);
         Rectangle sourceRec = LuaGetArgument_Rectangle(L, 2);
@@ -2227,7 +2227,7 @@ extern lua_State *L;
     }
 
     // Draw a part of a texture defined by a rectangle with 'pro' parameters
-    inline int lua_DrawTexturePro(lua_State *L)
+    inline static int lua_DrawTexturePro(lua_State *L)
     {
         Texture2D texture = LuaGetArgument_Texture2D(L, 1);
         Rectangle sourceRec = LuaGetArgument_Rectangle(L, 2);
@@ -2244,7 +2244,7 @@ extern lua_State *L;
     //------------------------------------------------------------------------------------
 
     // Get the default Font
-    inline int lua_GetFontDefault(lua_State *L)
+    inline static int lua_GetFontDefault(lua_State *L)
     {
         Font result = GetFontDefault();
         LuaPush_Font(L, result);
@@ -2252,7 +2252,7 @@ extern lua_State *L;
     }
 
     // Load font from file into GPU memory (VRAM)
-    inline int lua_LoadFont(lua_State *L)
+    inline static int lua_LoadFont(lua_State *L)
     {
         const char *fileName = LuaGetArgument_string(L, 1);
         Font result = LoadFont(fileName);
@@ -2261,7 +2261,7 @@ extern lua_State *L;
     }
 
     // Load font from file with extended parameters
-    inline int lua_LoadFontEx(lua_State *L)
+    inline static int lua_LoadFontEx(lua_State *L)
     {
         const char *fileName = LuaGetArgument_string(L, 1);
         int fontSize = LuaGetArgument_int(L, 2);
@@ -2273,7 +2273,7 @@ extern lua_State *L;
     }
 
     // Unload Font from GPU memory (VRAM)
-    inline int lua_UnloadFont(lua_State *L)
+    inline static int lua_UnloadFont(lua_State *L)
     {
         Font font = LuaGetArgument_Font(L, 1);
         UnloadFont(font);
@@ -2282,7 +2282,7 @@ extern lua_State *L;
 
     // Text drawing functions
     // Shows current FPS
-    inline int lua_DrawFPS(lua_State *L)
+    inline static int lua_DrawFPS(lua_State *L)
     {
         int posX = LuaGetArgument_int(L, 1);
         int posY = LuaGetArgument_int(L, 2);
@@ -2291,7 +2291,7 @@ extern lua_State *L;
     }
 
     // Draw text (using default font)
-    inline int lua_DrawText(lua_State *L)
+    inline static int lua_DrawText(lua_State *L)
     {
         const char *text = LuaGetArgument_string(L, 1);
         int posX = LuaGetArgument_int(L, 2);
@@ -2303,7 +2303,7 @@ extern lua_State *L;
     }
 
     // WARNING: Draw text using font and additional parameters
-    inline int lua_DrawTextEx(lua_State *L)
+    inline static int lua_DrawTextEx(lua_State *L)
     {
         Font font = LuaGetArgument_Font(L, 1);
         const char *text = LuaGetArgument_string(L, 2);
@@ -2317,7 +2317,7 @@ extern lua_State *L;
 
     // Text misc. functions
     // Measure string width for default font
-    inline int lua_MeasureText(lua_State *L)
+    inline static int lua_MeasureText(lua_State *L)
     {
         const char *text = LuaGetArgument_string(L, 1);
         int fontSize = LuaGetArgument_int(L, 2);
@@ -2327,7 +2327,7 @@ extern lua_State *L;
     }
 
     // Measure string size for Font
-    inline int lua_MeasureTextEx(lua_State *L)
+    inline static int lua_MeasureTextEx(lua_State *L)
     {
         Font font = LuaGetArgument_Font(L, 1);
         const char *text = LuaGetArgument_string(L, 2);
@@ -2342,7 +2342,7 @@ extern lua_State *L;
     // WARNING: SubText() can be replaced by Lua function: string.sub()
 
     // Get index position for a unicode character on font
-    inline int lua_GetGlyphIndex(lua_State *L)
+    inline static int lua_GetGlyphIndex(lua_State *L)
     {
         Font font = LuaGetArgument_Font(L, 1);
         int character = LuaGetArgument_int(L, 2);
@@ -2356,7 +2356,7 @@ extern lua_State *L;
     //------------------------------------------------------------------------------------
 
     // Draw a line in 3D world space
-    inline int lua_DrawLine3D(lua_State *L)
+    inline static int lua_DrawLine3D(lua_State *L)
     {
         Vector3 startPos = LuaGetArgument_Vector3(L, 1);
         Vector3 endPos = LuaGetArgument_Vector3(L, 2);
@@ -2366,7 +2366,7 @@ extern lua_State *L;
     }
 
     // Draw a circle in 3D world space
-    inline int lua_DrawCircle3D(lua_State *L)
+    inline static int lua_DrawCircle3D(lua_State *L)
     {
         Vector3 center = LuaGetArgument_Vector3(L, 1);
         float radius = LuaGetArgument_float(L, 2);
@@ -2378,7 +2378,7 @@ extern lua_State *L;
     }
 
     // Draw cube
-    inline int lua_DrawCube(lua_State *L)
+    inline static int lua_DrawCube(lua_State *L)
     {
         Vector3 position = LuaGetArgument_Vector3(L, 1);
         float width = LuaGetArgument_float(L, 2);
@@ -2390,7 +2390,7 @@ extern lua_State *L;
     }
 
     // Draw cube (Vector version)
-    inline int lua_DrawCubeV(lua_State *L)
+    inline static int lua_DrawCubeV(lua_State *L)
     {
         Vector3 position = LuaGetArgument_Vector3(L, 1);
         Vector3 size = LuaGetArgument_Vector3(L, 2);
@@ -2400,7 +2400,7 @@ extern lua_State *L;
     }
 
     // Draw cube wires
-    inline int lua_DrawCubeWires(lua_State *L)
+    inline static int lua_DrawCubeWires(lua_State *L)
     {
         Vector3 position = LuaGetArgument_Vector3(L, 1);
         float width = LuaGetArgument_float(L, 2);
@@ -2412,7 +2412,7 @@ extern lua_State *L;
     }
 
     // Draw sphere
-    inline int lua_DrawSphere(lua_State *L)
+    inline static int lua_DrawSphere(lua_State *L)
     {
         Vector3 centerPos = LuaGetArgument_Vector3(L, 1);
         float radius = LuaGetArgument_float(L, 2);
@@ -2422,7 +2422,7 @@ extern lua_State *L;
     }
 
     // Draw sphere with extended parameters
-    inline int lua_DrawSphereEx(lua_State *L)
+    inline static int lua_DrawSphereEx(lua_State *L)
     {
         Vector3 centerPos = LuaGetArgument_Vector3(L, 1);
         float radius = LuaGetArgument_float(L, 2);
@@ -2434,7 +2434,7 @@ extern lua_State *L;
     }
 
     // Draw sphere wires
-    inline int lua_DrawSphereWires(lua_State *L)
+    inline static int lua_DrawSphereWires(lua_State *L)
     {
         Vector3 centerPos = LuaGetArgument_Vector3(L, 1);
         float radius = LuaGetArgument_float(L, 2);
@@ -2446,7 +2446,7 @@ extern lua_State *L;
     }
 
     // Draw a cylinder/cone
-    inline int lua_DrawCylinder(lua_State *L)
+    inline static int lua_DrawCylinder(lua_State *L)
     {
         Vector3 position = LuaGetArgument_Vector3(L, 1);
         float radiusTop = LuaGetArgument_float(L, 2);
@@ -2459,7 +2459,7 @@ extern lua_State *L;
     }
 
     // Draw a cylinder/cone wires
-    inline int lua_DrawCylinderWires(lua_State *L)
+    inline static int lua_DrawCylinderWires(lua_State *L)
     {
         Vector3 position = LuaGetArgument_Vector3(L, 1);
         float radiusTop = LuaGetArgument_float(L, 2);
@@ -2472,7 +2472,7 @@ extern lua_State *L;
     }
 
     // Draw a plane XZ
-    inline int lua_DrawPlane(lua_State *L)
+    inline static int lua_DrawPlane(lua_State *L)
     {
         Vector3 centerPos = LuaGetArgument_Vector3(L, 1);
         Vector2 size = LuaGetArgument_Vector2(L, 2);
@@ -2482,7 +2482,7 @@ extern lua_State *L;
     }
 
     // Draw a ray line
-    inline int lua_DrawRay(lua_State *L)
+    inline static int lua_DrawRay(lua_State *L)
     {
         Ray ray = LuaGetArgument_Ray(L, 1);
         Color color = LuaGetArgument_Color(L, 2);
@@ -2491,7 +2491,7 @@ extern lua_State *L;
     }
 
     // Draw a grid (centered at (0, 0, 0))
-    inline int lua_DrawGrid(lua_State *L)
+    inline static int lua_DrawGrid(lua_State *L)
     {
         int slices = LuaGetArgument_int(L, 1);
         float spacing = LuaGetArgument_float(L, 2);
@@ -2500,7 +2500,7 @@ extern lua_State *L;
     }
 
     // Draw bounding box (wires)
-    inline int lua_DrawBoundingBox(lua_State *L)
+    inline static int lua_DrawBoundingBox(lua_State *L)
     {
         BoundingBox box = LuaGetArgument_BoundingBox(L, 1);
         Color color = LuaGetArgument_Color(L, 2);
@@ -2509,7 +2509,7 @@ extern lua_State *L;
     }
 
     // Draw a billboard texture
-    inline int lua_DrawBillboard(lua_State *L)
+    inline static int lua_DrawBillboard(lua_State *L)
     {
         Camera camera = LuaGetArgument_Camera(L, 1);
         Texture2D texture = LuaGetArgument_Texture2D(L, 2);
@@ -2522,7 +2522,7 @@ extern lua_State *L;
 
     // Collision detection functions
     // Detect collision between two spheres
-    inline int lua_CheckCollisionSpheres(lua_State *L)
+    inline static int lua_CheckCollisionSpheres(lua_State *L)
     {
         Vector3 centerA = LuaGetArgument_Vector3(L, 1);
         float radiusA = LuaGetArgument_float(L, 2);
@@ -2534,7 +2534,7 @@ extern lua_State *L;
     }
 
     // Detect collision between two bounding boxes
-    inline int lua_CheckCollisionBoxes(lua_State *L)
+    inline static int lua_CheckCollisionBoxes(lua_State *L)
     {
         BoundingBox box1 = LuaGetArgument_BoundingBox(L, 1);
         BoundingBox box2 = LuaGetArgument_BoundingBox(L, 2);
@@ -2544,7 +2544,7 @@ extern lua_State *L;
     }
 
     // Detect collision between box and sphere
-    inline int lua_CheckCollisionBoxSphere(lua_State *L)
+    inline static int lua_CheckCollisionBoxSphere(lua_State *L)
     {
         BoundingBox box = LuaGetArgument_BoundingBox(L, 1);
         Vector3 centerSphere = LuaGetArgument_Vector3(L, 2);
@@ -2559,7 +2559,7 @@ extern lua_State *L;
     //------------------------------------------------------------------------------------
 
     // Load shader from files and bind default locations
-    inline int lua_LoadShader(lua_State *L)
+    inline static int lua_LoadShader(lua_State *L)
     {
         const char *vsFileName = LuaGetArgument_string(L, 1);
         const char *fsFileName = LuaGetArgument_string(L, 2);
@@ -2568,7 +2568,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_LoadShaderFromMemory(lua_State *L)
+    inline static int lua_LoadShaderFromMemory(lua_State *L)
     {
         const char *vertex = LuaGetArgument_string(L, 1);
         const char *fragment = LuaGetArgument_string(L, 2);
@@ -2578,7 +2578,7 @@ extern lua_State *L;
     }
 
     // Unload shader from GPU memory (VRAM)
-    inline int lua_UnloadShader(lua_State *L)
+    inline static int lua_UnloadShader(lua_State *L)
     {
         Shader shader = LuaGetArgument_Shader(L, 1);
         UnloadShader(shader);
@@ -2588,7 +2588,7 @@ extern lua_State *L;
     // Shader configuration functions
 
     // Get shader uniform location
-    inline int lua_GetShaderLocation(lua_State *L)
+    inline static int lua_GetShaderLocation(lua_State *L)
     {
         Shader shader = LuaGetArgument_Shader(L, 1);
         const char *uniformName = LuaGetArgument_string(L, 2);
@@ -2598,7 +2598,7 @@ extern lua_State *L;
     }
 
     // Set shader uniform value (matrix 4x4)
-    inline int lua_SetShaderValueMatrix(lua_State *L)
+    inline static int lua_SetShaderValueMatrix(lua_State *L)
     {
         Shader shader = LuaGetArgument_Shader(L, 1);
         int uniformLoc = LuaGetArgument_int(L, 2);
@@ -2609,7 +2609,7 @@ extern lua_State *L;
 
     // Shading begin/end functions
     // Begin custom shader drawing
-    inline int lua_BeginShaderMode(lua_State *L)
+    inline static int lua_BeginShaderMode(lua_State *L)
     {
         Shader shader = LuaGetArgument_Shader(L, 1);
         BeginShaderMode(shader);
@@ -2617,14 +2617,14 @@ extern lua_State *L;
     }
 
     // End custom shader drawing (use default shader)
-    inline int lua_EndShaderMode(lua_State *L)
+    inline static int lua_EndShaderMode(lua_State *L)
     {
         EndShaderMode();
         return 0;
     }
 
     // Begin blending mode (alpha, additive, multiplied)
-    inline int lua_BeginBlendMode(lua_State *L)
+    inline static int lua_BeginBlendMode(lua_State *L)
     {
         int mode = LuaGetArgument_int(L, 1);
         BeginBlendMode(mode);
@@ -2632,7 +2632,7 @@ extern lua_State *L;
     }
 
     // End blending mode (reset to default: alpha blending)
-    inline int lua_EndBlendMode(lua_State *L)
+    inline static int lua_EndBlendMode(lua_State *L)
     {
         EndBlendMode();
         return 0;
@@ -2643,21 +2643,21 @@ extern lua_State *L;
     //------------------------------------------------------------------------------------
 
     // Initialize audio device and context
-    inline int lua_InitAudioDevice(lua_State *L)
+    inline static int lua_InitAudioDevice(lua_State *L)
     {
         InitAudioDevice();
         return 0;
     }
 
     // Close the audio device and context
-    inline int lua_CloseAudioDevice(lua_State *L)
+    inline static int lua_CloseAudioDevice(lua_State *L)
     {
         CloseAudioDevice();
         return 0;
     }
 
     // Check if audio device has been initialized successfully
-    inline int lua_IsAudioDeviceReady(lua_State *L)
+    inline static int lua_IsAudioDeviceReady(lua_State *L)
     {
         bool result = IsAudioDeviceReady();
         LuaPush_bool(L, result);
@@ -2665,7 +2665,7 @@ extern lua_State *L;
     }
 
     // Set master volume (listener)
-    inline int lua_SetMasterVolume(lua_State *L)
+    inline static int lua_SetMasterVolume(lua_State *L)
     {
         float volume = LuaGetArgument_float(L, 1);
         SetMasterVolume(volume);
@@ -2674,7 +2674,7 @@ extern lua_State *L;
 
     // Wave/Sound loading/unloading functions
     // Load wave data from file
-    inline int lua_LoadWave(lua_State *L)
+    inline static int lua_LoadWave(lua_State *L)
     {
         const char *fileName = LuaGetArgument_string(L, 1);
         Wave result = LoadWave(fileName);
@@ -2683,7 +2683,7 @@ extern lua_State *L;
     }
 
     // Load sound from file
-    inline int lua_LoadSound(lua_State *L)
+    inline static int lua_LoadSound(lua_State *L)
     {
         const char *fileName = LuaGetArgument_string(L, 1);
         Sound result = LoadSound(fileName);
@@ -2692,7 +2692,7 @@ extern lua_State *L;
     }
 
     // Load sound from wave data
-    inline int lua_LoadSoundFromWave(lua_State *L)
+    inline static int lua_LoadSoundFromWave(lua_State *L)
     {
         Wave wave = LuaGetArgument_Wave(L, 1);
         Sound result = LoadSoundFromWave(wave);
@@ -2701,7 +2701,7 @@ extern lua_State *L;
     }
 
     // WARNING: Update sound buffer with new data
-    inline int lua_UpdateSound(lua_State *L)
+    inline static int lua_UpdateSound(lua_State *L)
     {
         // TODO: arg2 parameter is a void pointer...
 
@@ -2713,7 +2713,7 @@ extern lua_State *L;
     }
 
     // Unload wave data
-    inline int lua_UnloadWave(lua_State *L)
+    inline static int lua_UnloadWave(lua_State *L)
     {
         Wave wave = LuaGetArgument_Wave(L, 1);
         UnloadWave(wave);
@@ -2721,7 +2721,7 @@ extern lua_State *L;
     }
 
     // Unload sound
-    inline int lua_UnloadSound(lua_State *L)
+    inline static int lua_UnloadSound(lua_State *L)
     {
         Sound sound = LuaGetArgument_Sound(L, 1);
         UnloadSound(sound);
@@ -2730,7 +2730,7 @@ extern lua_State *L;
 
     // Wave/Sound management functions
     // Play a sound
-    inline int lua_PlaySound(lua_State *L)
+    inline static int lua_PlaySound(lua_State *L)
     {
         Sound sound = LuaGetArgument_Sound(L, 1);
         PlaySound(sound);
@@ -2738,7 +2738,7 @@ extern lua_State *L;
     }
 
     // Pause a sound
-    inline int lua_PauseSound(lua_State *L)
+    inline static int lua_PauseSound(lua_State *L)
     {
         Sound sound = LuaGetArgument_Sound(L, 1);
         PauseSound(sound);
@@ -2746,7 +2746,7 @@ extern lua_State *L;
     }
 
     // Resume a paused sound
-    inline int lua_ResumeSound(lua_State *L)
+    inline static int lua_ResumeSound(lua_State *L)
     {
         Sound sound = LuaGetArgument_Sound(L, 1);
         ResumeSound(sound);
@@ -2754,7 +2754,7 @@ extern lua_State *L;
     }
 
     // Stop playing a sound
-    inline int lua_StopSound(lua_State *L)
+    inline static int lua_StopSound(lua_State *L)
     {
         Sound sound = LuaGetArgument_Sound(L, 1);
         StopSound(sound);
@@ -2762,7 +2762,7 @@ extern lua_State *L;
     }
 
     // Check if a sound is currently playing
-    inline int lua_IsSoundPlaying(lua_State *L)
+    inline static int lua_IsSoundPlaying(lua_State *L)
     {
         Sound sound = LuaGetArgument_Sound(L, 1);
         bool result = IsSoundPlaying(sound);
@@ -2771,7 +2771,7 @@ extern lua_State *L;
     }
 
     // Set volume for a sound (1.0 is max level)
-    inline int lua_SetSoundVolume(lua_State *L)
+    inline static int lua_SetSoundVolume(lua_State *L)
     {
         Sound sound = LuaGetArgument_Sound(L, 1);
         float volume = LuaGetArgument_float(L, 2);
@@ -2780,7 +2780,7 @@ extern lua_State *L;
     }
 
     // Set pitch for a sound (1.0 is base level)
-    inline int lua_SetSoundPitch(lua_State *L)
+    inline static int lua_SetSoundPitch(lua_State *L)
     {
         Sound sound = LuaGetArgument_Sound(L, 1);
         float pitch = LuaGetArgument_float(L, 2);
@@ -2791,7 +2791,7 @@ extern lua_State *L;
     // Music management functions
 
     // Load music stream from file
-    inline int lua_LoadMusicStream(lua_State *L)
+    inline static int lua_LoadMusicStream(lua_State *L)
     {
         const char *fileName = LuaGetArgument_string(L, 1);
         Music result = LoadMusicStream(fileName);
@@ -2800,7 +2800,7 @@ extern lua_State *L;
     }
 
     // Unload music stream
-    inline int lua_UnloadMusicStream(lua_State *L)
+    inline static int lua_UnloadMusicStream(lua_State *L)
     {
         Music music = LuaGetArgument_Music(L, 1);
         UnloadMusicStream(music);
@@ -2808,7 +2808,7 @@ extern lua_State *L;
     }
 
     // Start music playing
-    inline int lua_PlayMusicStream(lua_State *L)
+    inline static int lua_PlayMusicStream(lua_State *L)
     {
         Music music = LuaGetArgument_Music(L, 1);
         PlayMusicStream(music);
@@ -2816,7 +2816,7 @@ extern lua_State *L;
     }
 
     // Updates buffers for music streaming
-    inline int lua_UpdateMusicStream(lua_State *L)
+    inline static int lua_UpdateMusicStream(lua_State *L)
     {
         Music music = LuaGetArgument_Music(L, 1);
         UpdateMusicStream(music);
@@ -2824,7 +2824,7 @@ extern lua_State *L;
     }
 
     // Stop music playing
-    inline int lua_StopMusicStream(lua_State *L)
+    inline static int lua_StopMusicStream(lua_State *L)
     {
         Music music = LuaGetArgument_Music(L, 1);
         StopMusicStream(music);
@@ -2832,7 +2832,7 @@ extern lua_State *L;
     }
 
     // Pause music playing
-    inline int lua_PauseMusicStream(lua_State *L)
+    inline static int lua_PauseMusicStream(lua_State *L)
     {
         Music music = LuaGetArgument_Music(L, 1);
         PauseMusicStream(music);
@@ -2840,7 +2840,7 @@ extern lua_State *L;
     }
 
     // Resume playing paused music
-    inline int lua_ResumeMusicStream(lua_State *L)
+    inline static int lua_ResumeMusicStream(lua_State *L)
     {
         Music music = LuaGetArgument_Music(L, 1);
         ResumeMusicStream(music);
@@ -2848,7 +2848,7 @@ extern lua_State *L;
     }
 
     // Check if music is playing
-    inline int lua_IsMusicPlaying(lua_State *L)
+    inline static int lua_IsMusicPlaying(lua_State *L)
     {
         Music music = LuaGetArgument_Music(L, 1);
         bool result = IsMusicStreamPlaying(music);
@@ -2857,7 +2857,7 @@ extern lua_State *L;
     }
 
     // Set volume for music (1.0 is max level)
-    inline int lua_SetMusicVolume(lua_State *L)
+    inline static int lua_SetMusicVolume(lua_State *L)
     {
         Music music = LuaGetArgument_Music(L, 1);
         float volume = LuaGetArgument_float(L, 2);
@@ -2866,7 +2866,7 @@ extern lua_State *L;
     }
 
     // Set pitch for a music (1.0 is base level)
-    inline int lua_SetMusicPitch(lua_State *L)
+    inline static int lua_SetMusicPitch(lua_State *L)
     {
         Music music = LuaGetArgument_Music(L, 1);
         float pitch = LuaGetArgument_float(L, 2);
@@ -2875,7 +2875,7 @@ extern lua_State *L;
     }
 
     // Get music time length (in seconds)
-    inline int lua_GetMusicTimeLength(lua_State *L)
+    inline static int lua_GetMusicTimeLength(lua_State *L)
     {
         Music music = LuaGetArgument_Music(L, 1);
         float result = GetMusicTimeLength(music);
@@ -2884,7 +2884,7 @@ extern lua_State *L;
     }
 
     // Get current music time played (in seconds)
-    inline int lua_GetMusicTimePlayed(lua_State *L)
+    inline static int lua_GetMusicTimePlayed(lua_State *L)
     {
         Music music = LuaGetArgument_Music(L, 1);
         float result = GetMusicTimePlayed(music);
@@ -2894,7 +2894,7 @@ extern lua_State *L;
 
     // AudioStream management functions
     // Init audio stream (to stream raw audio pcm data)
-    inline int lua_InitAudioStream(lua_State *L)
+    inline static int lua_InitAudioStream(lua_State *L)
     {
         unsigned int sampleRate = LuaGetArgument_unsigned(L, 1);
         unsigned int sampleSize = LuaGetArgument_unsigned(L, 2);
@@ -2905,7 +2905,7 @@ extern lua_State *L;
     }
 
     // WARNING: Update audio stream buffers with data
-    inline int lua_UpdateAudioStream(lua_State *L)
+    inline static int lua_UpdateAudioStream(lua_State *L)
     {
         // TODO: arg2 parameter is a void pointer...
 
@@ -2917,7 +2917,7 @@ extern lua_State *L;
     }
 
     // Close audio stream and free memory
-    inline int lua_CloseAudioStream(lua_State *L)
+    inline static int lua_CloseAudioStream(lua_State *L)
     {
         AudioStream stream = LuaGetArgument_AudioStream(L, 1);
         UnloadAudioStream(stream);
@@ -2925,7 +2925,7 @@ extern lua_State *L;
     }
 
     // Play audio stream
-    inline int lua_PlayAudioStream(lua_State *L)
+    inline static int lua_PlayAudioStream(lua_State *L)
     {
         AudioStream stream = LuaGetArgument_AudioStream(L, 1);
         PlayAudioStream(stream);
@@ -2933,7 +2933,7 @@ extern lua_State *L;
     }
 
     // Pause audio stream
-    inline int lua_PauseAudioStream(lua_State *L)
+    inline static int lua_PauseAudioStream(lua_State *L)
     {
         AudioStream stream = LuaGetArgument_AudioStream(L, 1);
         PauseAudioStream(stream);
@@ -2941,7 +2941,7 @@ extern lua_State *L;
     }
 
     // Resume audio stream
-    inline int lua_ResumeAudioStream(lua_State *L)
+    inline static int lua_ResumeAudioStream(lua_State *L)
     {
         AudioStream stream = LuaGetArgument_AudioStream(L, 1);
         ResumeAudioStream(stream);
@@ -2949,7 +2949,7 @@ extern lua_State *L;
     }
 
     // Check if audio stream is playing
-    inline int lua_IsAudioStreamPlaying(lua_State *L)
+    inline static int lua_IsAudioStreamPlaying(lua_State *L)
     {
         AudioStream stream = LuaGetArgument_AudioStream(L, 1);
         bool result = IsAudioStreamPlaying(stream);
@@ -2958,7 +2958,7 @@ extern lua_State *L;
     }
 
     // Stop audio stream
-    inline int lua_StopAudioStream(lua_State *L)
+    inline static int lua_StopAudioStream(lua_State *L)
     {
         AudioStream stream = LuaGetArgument_AudioStream(L, 1);
         StopAudioStream(stream);
@@ -2966,7 +2966,7 @@ extern lua_State *L;
     }
 
     // Set volume for audio stream (1.0 is max level)
-    inline int lua_SetAudioStreamVolume(lua_State *L)
+    inline static int lua_SetAudioStreamVolume(lua_State *L)
     {
         AudioStream stream = LuaGetArgument_AudioStream(L, 1);
         float volume = LuaGetArgument_float(L, 2);
@@ -2975,7 +2975,7 @@ extern lua_State *L;
     }
 
     // Set pitch for audio stream (1.0 is base level)
-    inline int lua_SetAudioStreamPitch(lua_State *L)
+    inline static int lua_SetAudioStreamPitch(lua_State *L)
     {
         AudioStream stream = LuaGetArgument_AudioStream(L, 1);
         float pitch = LuaGetArgument_float(L, 2);
@@ -2988,7 +2988,7 @@ extern lua_State *L;
     //----------------------------------------------------------------------------------
     // Module Functions Definition - Utils math
     //----------------------------------------------------------------------------------
-    inline int lua_Clamp(lua_State *L)
+    inline static int lua_Clamp(lua_State *L)
     {
         float arg1 = LuaGetArgument_float(L, 1);
         float arg2 = LuaGetArgument_float(L, 2);
@@ -3001,21 +3001,21 @@ extern lua_State *L;
     //----------------------------------------------------------------------------------
     // Module Functions Definition - Vector2 math
     //----------------------------------------------------------------------------------
-    inline int lua_Vector2Zero(lua_State *L)
+    inline static int lua_Vector2Zero(lua_State *L)
     {
         Vector2 result = Vector2Zero();
         LuaPush_Vector2(L, result);
         return 1;
     }
 
-    inline int lua_Vector2One(lua_State *L)
+    inline static int lua_Vector2One(lua_State *L)
     {
         Vector2 result = Vector2One();
         LuaPush_Vector2(L, result);
         return 1;
     }
 
-    inline int lua_Vector2Add(lua_State *L)
+    inline static int lua_Vector2Add(lua_State *L)
     {
         Vector2 arg1 = LuaGetArgument_Vector2(L, 1);
         Vector2 arg2 = LuaGetArgument_Vector2(L, 2);
@@ -3024,7 +3024,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_Vector2Subtract(lua_State *L)
+    inline static int lua_Vector2Subtract(lua_State *L)
     {
         Vector2 arg1 = LuaGetArgument_Vector2(L, 1);
         Vector2 arg2 = LuaGetArgument_Vector2(L, 2);
@@ -3033,7 +3033,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_Vector2Lenght(lua_State *L)
+    inline static int lua_Vector2Lenght(lua_State *L)
     {
         Vector2 arg1 = LuaGetArgument_Vector2(L, 1);
         float result = Vector2Length(arg1);
@@ -3041,7 +3041,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_Vector2DotProduct(lua_State *L)
+    inline static int lua_Vector2DotProduct(lua_State *L)
     {
         Vector2 arg1 = LuaGetArgument_Vector2(L, 1);
         Vector2 arg2 = LuaGetArgument_Vector2(L, 2);
@@ -3050,7 +3050,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_Vector2Distance(lua_State *L)
+    inline static int lua_Vector2Distance(lua_State *L)
     {
         Vector2 arg1 = LuaGetArgument_Vector2(L, 1);
         Vector2 arg2 = LuaGetArgument_Vector2(L, 2);
@@ -3059,7 +3059,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_Vector2Angle(lua_State *L)
+    inline static int lua_Vector2Angle(lua_State *L)
     {
         Vector2 arg1 = LuaGetArgument_Vector2(L, 1);
         Vector2 arg2 = LuaGetArgument_Vector2(L, 2);
@@ -3068,7 +3068,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_Vector2Scale(lua_State *L)
+    inline static int lua_Vector2Scale(lua_State *L)
     {
         Vector2 arg1 = LuaGetArgument_Vector2(L, 1);
         float arg2 = LuaGetArgument_float(L, 2);
@@ -3077,7 +3077,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_Vector2Negate(lua_State *L)
+    inline static int lua_Vector2Negate(lua_State *L)
     {
         Vector2 arg1 = LuaGetArgument_Vector2(L, 1);
         Vector2Negate(arg1);
@@ -3085,7 +3085,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_Vector2Divide(lua_State *L)
+    inline static int lua_Vector2Divide(lua_State *L)
     {
         Vector2 arg1 = LuaGetArgument_Vector2(L, 1);
         float arg2 = LuaGetArgument_float(L, 2);
@@ -3094,7 +3094,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_Vector2Normalize(lua_State *L)
+    inline static int lua_Vector2Normalize(lua_State *L)
     {
         Vector2 arg1 = LuaGetArgument_Vector2(L, 1);
         Vector2Normalize(arg1);
@@ -3105,21 +3105,21 @@ extern lua_State *L;
     //----------------------------------------------------------------------------------
     // raylib [raymath] module functions - Vector3 math
     //----------------------------------------------------------------------------------
-    inline int lua_Vector3Zero(lua_State *L)
+    inline static int lua_Vector3Zero(lua_State *L)
     {
         Vector3 result = Vector3Zero();
         LuaPush_Vector3(L, result);
         return 1;
     }
 
-    inline int lua_Vector3One(lua_State *L)
+    inline static int lua_Vector3One(lua_State *L)
     {
         Vector3 result = Vector3One();
         LuaPush_Vector3(L, result);
         return 1;
     }
 
-    inline int lua_Vector3Add(lua_State *L)
+    inline static int lua_Vector3Add(lua_State *L)
     {
         Vector3 arg1 = LuaGetArgument_Vector3(L, 1);
         Vector3 arg2 = LuaGetArgument_Vector3(L, 2);
@@ -3128,7 +3128,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_Vector3Subtract(lua_State *L)
+    inline static int lua_Vector3Subtract(lua_State *L)
     {
         Vector3 arg1 = LuaGetArgument_Vector3(L, 1);
         Vector3 arg2 = LuaGetArgument_Vector3(L, 2);
@@ -3137,7 +3137,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_Vector3CrossProduct(lua_State *L)
+    inline static int lua_Vector3CrossProduct(lua_State *L)
     {
         Vector3 arg1 = LuaGetArgument_Vector3(L, 1);
         Vector3 arg2 = LuaGetArgument_Vector3(L, 2);
@@ -3146,7 +3146,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_Vector3Perpendicular(lua_State *L)
+    inline static int lua_Vector3Perpendicular(lua_State *L)
     {
         Vector3 arg1 = LuaGetArgument_Vector3(L, 1);
         Vector3 result = Vector3Perpendicular(arg1);
@@ -3154,7 +3154,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_Vector3DotProduct(lua_State *L)
+    inline static int lua_Vector3DotProduct(lua_State *L)
     {
         Vector3 arg1 = LuaGetArgument_Vector3(L, 1);
         Vector3 arg2 = LuaGetArgument_Vector3(L, 2);
@@ -3163,7 +3163,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_Vector3Length(lua_State *L)
+    inline static int lua_Vector3Length(lua_State *L)
     {
         const Vector3 arg1 = LuaGetArgument_Vector3(L, 1);
         float result = Vector3Length(arg1);
@@ -3171,7 +3171,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_Vector3Scale(lua_State *L)
+    inline static int lua_Vector3Scale(lua_State *L)
     {
         Vector3 arg1 = LuaGetArgument_Vector3(L, 1);
         float arg2 = LuaGetArgument_float(L, 2);
@@ -3180,7 +3180,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_Vector3Negate(lua_State *L)
+    inline static int lua_Vector3Negate(lua_State *L)
     {
         Vector3 arg1 = LuaGetArgument_Vector3(L, 1);
         Vector3Negate(arg1);
@@ -3188,7 +3188,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_Vector3Normalize(lua_State *L)
+    inline static int lua_Vector3Normalize(lua_State *L)
     {
         Vector3 arg1 = LuaGetArgument_Vector3(L, 1);
         Vector3Normalize(arg1);
@@ -3196,7 +3196,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_Vector3Distance(lua_State *L)
+    inline static int lua_Vector3Distance(lua_State *L)
     {
         Vector3 arg1 = LuaGetArgument_Vector3(L, 1);
         Vector3 arg2 = LuaGetArgument_Vector3(L, 2);
@@ -3205,7 +3205,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_Vector3Lerp(lua_State *L)
+    inline static int lua_Vector3Lerp(lua_State *L)
     {
         Vector3 arg1 = LuaGetArgument_Vector3(L, 1);
         Vector3 arg2 = LuaGetArgument_Vector3(L, 2);
@@ -3215,7 +3215,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_Vector3Reflect(lua_State *L)
+    inline static int lua_Vector3Reflect(lua_State *L)
     {
         Vector3 arg1 = LuaGetArgument_Vector3(L, 1);
         Vector3 arg2 = LuaGetArgument_Vector3(L, 2);
@@ -3224,7 +3224,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_Vector3Transform(lua_State *L)
+    inline static int lua_Vector3Transform(lua_State *L)
     {
         Vector3 arg1 = LuaGetArgument_Vector3(L, 1);
         Matrix arg2 = LuaGetArgument_Matrix(L, 2);
@@ -3233,7 +3233,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_Vector4Lerp(lua_State *L)
+    inline static int lua_Vector4Lerp(lua_State *L)
     {
         Vector4 arg1 = LuaGetArgument_Vector4(L, 1);
         Vector4 arg2 = LuaGetArgument_Vector4(L, 2);
@@ -3246,7 +3246,7 @@ extern lua_State *L;
     //----------------------------------------------------------------------------------
     // raylib [raymath] module functions - Matrix math
     //----------------------------------------------------------------------------------
-    inline int lua_MatrixDeterminant(lua_State *L)
+    inline static int lua_MatrixDeterminant(lua_State *L)
     {
         Matrix arg1 = LuaGetArgument_Matrix(L, 1);
         float result = MatrixDeterminant(arg1);
@@ -3254,7 +3254,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_MatrixTrace(lua_State *L)
+    inline static int lua_MatrixTrace(lua_State *L)
     {
         Matrix arg1 = LuaGetArgument_Matrix(L, 1);
         float result = MatrixTrace(arg1);
@@ -3262,7 +3262,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_MatrixTranspose(lua_State *L)
+    inline static int lua_MatrixTranspose(lua_State *L)
     {
         Matrix arg1 = LuaGetArgument_Matrix(L, 1);
         MatrixTranspose(arg1);
@@ -3270,7 +3270,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_MatrixInvert(lua_State *L)
+    inline static int lua_MatrixInvert(lua_State *L)
     {
         Matrix arg1 = LuaGetArgument_Matrix(L, 1);
         MatrixInvert(arg1);
@@ -3278,14 +3278,14 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_MatrixIdentity(lua_State *L)
+    inline static int lua_MatrixIdentity(lua_State *L)
     {
         Matrix result = MatrixIdentity();
         LuaPush_Matrix(L, &result);
         return 1;
     }
 
-    inline int lua_MatrixAdd(lua_State *L)
+    inline static int lua_MatrixAdd(lua_State *L)
     {
         Matrix arg1 = LuaGetArgument_Matrix(L, 1);
         Matrix arg2 = LuaGetArgument_Matrix(L, 2);
@@ -3294,7 +3294,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_MatrixSubtract(lua_State *L)
+    inline static int lua_MatrixSubtract(lua_State *L)
     {
         Matrix arg1 = LuaGetArgument_Matrix(L, 1);
         Matrix arg2 = LuaGetArgument_Matrix(L, 2);
@@ -3303,7 +3303,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_MatrixTranslate(lua_State *L)
+    inline static int lua_MatrixTranslate(lua_State *L)
     {
         float arg1 = LuaGetArgument_float(L, 1);
         float arg2 = LuaGetArgument_float(L, 2);
@@ -3313,7 +3313,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_MatrixRotate(lua_State *L)
+    inline static int lua_MatrixRotate(lua_State *L)
     {
         Vector3 arg1 = LuaGetArgument_Vector3(L, 1);
         float arg2 = LuaGetArgument_float(L, 2);
@@ -3322,7 +3322,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_MatrixRotateX(lua_State *L)
+    inline static int lua_MatrixRotateX(lua_State *L)
     {
         float arg1 = LuaGetArgument_float(L, 1);
         Matrix result = MatrixRotateX(arg1);
@@ -3330,7 +3330,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_MatrixRotateY(lua_State *L)
+    inline static int lua_MatrixRotateY(lua_State *L)
     {
         float arg1 = LuaGetArgument_float(L, 1);
         Matrix result = MatrixRotateY(arg1);
@@ -3338,7 +3338,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_MatrixRotateZ(lua_State *L)
+    inline static int lua_MatrixRotateZ(lua_State *L)
     {
         float arg1 = LuaGetArgument_float(L, 1);
         Matrix result = MatrixRotateZ(arg1);
@@ -3346,7 +3346,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_MatrixScale(lua_State *L)
+    inline static int lua_MatrixScale(lua_State *L)
     {
         float arg1 = LuaGetArgument_float(L, 1);
         float arg2 = LuaGetArgument_float(L, 2);
@@ -3356,7 +3356,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_MatrixMultiply(lua_State *L)
+    inline static int lua_MatrixMultiply(lua_State *L)
     {
         Matrix arg1 = LuaGetArgument_Matrix(L, 1);
         Matrix arg2 = LuaGetArgument_Matrix(L, 2);
@@ -3365,7 +3365,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_MatrixFrustum(lua_State *L)
+    inline static int lua_MatrixFrustum(lua_State *L)
     {
         double arg1 = LuaGetArgument_double(L, 1);
         double arg2 = LuaGetArgument_double(L, 2);
@@ -3378,7 +3378,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_MatrixPerspective(lua_State *L)
+    inline static int lua_MatrixPerspective(lua_State *L)
     {
         double arg1 = LuaGetArgument_double(L, 1);
         double arg2 = LuaGetArgument_double(L, 2);
@@ -3389,7 +3389,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_MatrixOrtho(lua_State *L)
+    inline static int lua_MatrixOrtho(lua_State *L)
     {
         double arg1 = LuaGetArgument_double(L, 1);
         double arg2 = LuaGetArgument_double(L, 2);
@@ -3402,7 +3402,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_MatrixLookAt(lua_State *L)
+    inline static int lua_MatrixLookAt(lua_State *L)
     {
         Vector3 arg1 = LuaGetArgument_Vector3(L, 1);
         Vector3 arg2 = LuaGetArgument_Vector3(L, 2);
@@ -3415,7 +3415,7 @@ extern lua_State *L;
     //----------------------------------------------------------------------------------
     // raylib [raymath] module functions - Quaternion math
     //----------------------------------------------------------------------------------
-    inline int lua_QuaternionLength(lua_State *L)
+    inline static int lua_QuaternionLength(lua_State *L)
     {
         Quaternion arg1 = LuaGetArgument_Quaternion(L, 1);
         float result = QuaternionLength(arg1);
@@ -3423,7 +3423,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_QuaternionMultiply(lua_State *L)
+    inline static int lua_QuaternionMultiply(lua_State *L)
     {
         Quaternion arg1 = LuaGetArgument_Quaternion(L, 1);
         Quaternion arg2 = LuaGetArgument_Quaternion(L, 2);
@@ -3432,7 +3432,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_QuaternionSlerp(lua_State *L)
+    inline static int lua_QuaternionSlerp(lua_State *L)
     {
         Quaternion arg1 = LuaGetArgument_Quaternion(L, 1);
         Quaternion arg2 = LuaGetArgument_Quaternion(L, 2);
@@ -3442,7 +3442,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_QuaternionFromMatrix(lua_State *L)
+    inline static int lua_QuaternionFromMatrix(lua_State *L)
     {
         Matrix arg1 = LuaGetArgument_Matrix(L, 1);
         Quaternion result = QuaternionFromMatrix(arg1);
@@ -3450,7 +3450,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_QuaternionToMatrix(lua_State *L)
+    inline static int lua_QuaternionToMatrix(lua_State *L)
     {
         Quaternion arg1 = LuaGetArgument_Quaternion(L, 1);
         Matrix result = QuaternionToMatrix(arg1);
@@ -3458,7 +3458,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_QuaternionFromAxisAngle(lua_State *L)
+    inline static int lua_QuaternionFromAxisAngle(lua_State *L)
     {
         Vector3 arg1 = LuaGetArgument_Vector3(L, 1);
         float arg2 = LuaGetArgument_float(L, 2);
@@ -3467,7 +3467,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_QuaternionToAxisAngle(lua_State *L)
+    inline static int lua_QuaternionToAxisAngle(lua_State *L)
     {
         Quaternion arg1 = LuaGetArgument_Quaternion(L, 1);
         Vector3 arg2;
@@ -3478,7 +3478,7 @@ extern lua_State *L;
         return 2;
     }
 
-    inline int lua_QuaternionFromEuler(lua_State *L)
+    inline static int lua_QuaternionFromEuler(lua_State *L)
     {
         float arg1 = LuaGetArgument_float(L, 1);
         float arg2 = LuaGetArgument_float(L, 2);
@@ -3488,7 +3488,7 @@ extern lua_State *L;
         return 1;
     }
 
-    inline int lua_QuaternionToEuler(lua_State *L)
+    inline static int lua_QuaternionToEuler(lua_State *L)
     {
         Quaternion arg1 = LuaGetArgument_Quaternion(L, 1);
         Vector3 result = QuaternionToEuler(arg1);
@@ -3502,8 +3502,7 @@ extern lua_State *L;
 
 #ifdef RAYLIB_LUA_IMPLEMENTATION
 #define REG(name) {#name, lua_##name}
-
-    static luaL_Reg raylib_functions[] = {
+    luaL_Reg raylib_functions[] = {
 
         // Register non-opaque data types
         REG(Color),
@@ -3790,13 +3789,13 @@ extern lua_State *L;
     };
 #undef REG
 #else
-extern luaL_Reg raylib_functions[];
+    extern luaL_Reg raylib_functions[];
 #endif
 
+#ifdef RAYLIB_LUA_IMPLEMENTATION
     // Register raylib Lua functionality
-    inline void rLuaRegisterFunctions(const char *opt_table)
+    void rLuaRegisterFunctions(const char *opt_table)
     {
-
         if (opt_table)
             lua_createtable(L, 0, sizeof(raylib_functions) / sizeof(raylib_functions[0]));
         else
@@ -3806,7 +3805,7 @@ extern luaL_Reg raylib_functions[];
     }
 
     // Initialize Lua system
-    inline void rLuaInitDeviceFromExisting(lua_State *lua)
+    void rLuaInitDeviceFromExisting(lua_State *lua)
     {
         mainLuaState = lua;
         L = lua;
@@ -4076,7 +4075,10 @@ extern luaL_Reg raylib_functions[];
 
         rLuaRegisterFunctions(0); // Register Lua raylib functions
     }
-
+#else
+    void rLuaRegisterFunctions(const char *opt_table);
+    void rLuaInitDeviceFromExisting(lua_State *lua);
+#endif
 #ifdef __cplusplus
 }
 #endif
