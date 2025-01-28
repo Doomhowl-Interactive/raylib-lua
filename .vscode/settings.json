@@ -1,0 +1,6 @@
+{
+  "files.associations": {
+    "raylib-lua.h": "c",
+    "lualib.h": "c"
+  }
+}

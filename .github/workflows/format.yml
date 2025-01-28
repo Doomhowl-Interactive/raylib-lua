@@ -1,0 +1,26 @@
+name: Clang-Format Check
+
+on:
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+  clang-format-src:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: clang-format Check
+        uses: jidicula/clang-format-action@v4.14.0
+        with:
+          clang-format-version: 18
+          check-path: "include"
+
+      - name: clang-format Check
+        uses: jidicula/clang-format-action@v4.14.0
+        with:
+          clang-format-version: 18
+          check-path: "test"
+          exclude-regex: "vendor"
