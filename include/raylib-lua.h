@@ -1277,6 +1277,17 @@ extern lua_State *L;
         return 1;
     }
 
+    // Returns a Color from HSV values
+    inline static int lua_ColorLerp(lua_State *L)
+    {
+        Color c1 = LuaGetArgument_Color(L, 1);
+        Color c2 = LuaGetArgument_Color(L, 2);
+        float amount = LuaGetArgument_float(L, 3);
+        Color result = ColorLerp(c1, c2, amount);
+        LuaPush_Color(L, result);
+        return 1;
+    }
+
     // Returns a Color struct from hexadecimal value
     inline static int lua_GetColor(lua_State *L)
     {
@@ -3563,6 +3574,7 @@ extern lua_State *L;
         REG(ColorToInt),
         REG(ColorNormalize),
         REG(ColorToHSV),
+        REG(ColorLerp),
         REG(GetColor),
         REG(Fade),
         REG(SetConfigFlags),
